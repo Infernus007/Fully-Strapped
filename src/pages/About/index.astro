@@ -1,0 +1,19 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Sidebar from "../../components/Sidebar.astro";
+import MainContainer from "../../components/MainContainer.astro";
+import Footer from "../../components/Footer.astro";
+import AboutLayout from "../../layouts/AboutLayout.astro";
+---
+
+<Layout title="Welcome to Fully Straped.">
+  <Sidebar />
+  <MainContainer
+    subtitle="What is this all about"
+    title="why create this ?"
+  />
+  <div class="md:ml-20 lg:ml-88 pt-4">
+    <AboutLayout />
+    <Footer />
+  </div>
+</Layout>

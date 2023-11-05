@@ -1,0 +1,21 @@
+---
+import Footer from "../../components/Footer.astro";
+import SearchInput from "../../components/SearchInput.astro";
+import Layout from "../../layouts/Layout.astro";
+
+let pageTitle = "Search";
+let pageDescription = "Search all Articles";
+let seoTitle = "Search ";
+let seoDescription = "";
+---
+
+<Layout title="Search Components">
+  <main class="py-12 lg:py-20">
+    <article class="max-w-6xl mx-auto px-3">
+      <SearchInput />
+    </article>
+  </main>
+  <div class="absolute w-full bottom-0 left-0">
+    <Footer />
+  </div>
+</Layout>

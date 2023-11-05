@@ -1,0 +1,290 @@
+---
+title: card
+description: Minimalistic card designs
+img : m2.jpg
+
+---
+
+import Preview from "../../components/Preview.astro";
+import Card from "../../components/Card.astro";
+import NeoCard from "../../components/NeoCard.astro";
+import CardHoverBorder from "../../components/CardHoverBorder.astro";
+
+## Cards variant - 1
+
+<Preview>
+<div class="preview-component-wrapper-wrapper">
+<div class="preview-component-wrapper">
+<Card />
+</div>
+</div>
+
+```html
+
+<div class="card-wrapper">
+  <a
+    class="card"
+    href={url}
+  >
+    <div
+      class="card-img-top"
+      style={{ backgroundImage: `url(/${img})` }}
+    >
+    </div>
+
+    <div class="card-description">
+      <span class="text-base font-bold">{title}</span>
+      <span>{description}</span>
+    </div>
+  </a>
+</div>
+
+
+```
+
+```css
+.card {
+  display: inline-flex;
+  flex-direction: column;
+  border-radius: 2rem;
+  min-width: 18rem;
+  transition: all 100ms linear;
+  background-color: rgb(241 245 249);
+  width: 100%;
+  height: 100%;
+}
+
+.card:hover {
+  border-radius: 3rem;
+  background-color: rgb(191 219 254);
+}
+
+.card-img-top {
+  border-radius: 2rem;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 200px;
+  min-width: 200px;
+  background-position: 50%;
+}
+
+.card-img-top:hover {
+  border-radius: 2rem;
+}
+
+.card-description {
+  display: grid;
+  position: relative;
+  margin: 1.5rem; /* Adjust as needed */
+  gap: 0.5rem; /* Adjust as needed */
+  align-self: start;
+}
+```
+
+</Preview>
+
+## Cards variant - 2
+
+<Preview>
+<div class="preview-component-wrapper-wrapper">
+<div class="preview-component-wrapper">
+<CardHoverBorder />
+</div>
+</div>
+
+```html
+<div class="card">
+  <div class="card-body">
+    <div class="title">Castle in the Skys</div>
+    <div class="card-content">
+      <div class="description">
+        The orphan Sheeta inherited a mysterious crystal that links her to the
+        mythical sky-kingdom of Laputa.
+      </div>
+      <button>Learn More</button>
+    </div>
+  </div>
+</div>
+```
+
+```css
+.card {
+  padding: 1rem;
+  position: relative;
+  display: block;
+  height: 100%;
+  border-radius: 40px;
+  overflow: hidden;
+  text-decoration: none;
+  border: 0.15rem solid black;
+  max-height: fit-content;
+  max-width: 40ch;
+  line-height: 1.45rem;
+  font-size: 1.15rem;
+  overflow: hidden;
+  font-family: "Open Sans", sans-serif;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  --gradient: radial-gradient(
+      circle at 100% 0%,
+      rgb(0, 255, 255),
+      rgba(0, 255, 255, 0)
+    ), radial-gradient(circle at 0% 100%, rgb(255, 20, 146), rgba(255, 20, 146, 0));
+}
+.card::before {
+  content: "";
+  position: absolute;
+  height: 205%;
+  width: 50%;
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+  background-image: var(--gradient);
+  z-index: -2;
+  animation: border 10s linear infinite;
+}
+.card-body {
+  z-index: 1;
+  border-radius: 1em;
+  /* transform: translateY(16em); */
+}
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0.5em;
+  z-index: -1;
+  background-color: white;
+  border-radius: 1em;
+}
+
+.card-image {
+  height: 100%;
+  width: 100%;
+}
+.description {
+  padding-top: 3em;
+}
+.title::after {
+  content: "";
+  position: absolute;
+  height: 5px;
+  width: 100%;
+  left: 0;
+  bottom: -0.5em;
+  transition: all 500ms ease;
+  transform: scale(0);
+  transform-origin: left;
+  background-image: var(--gradient);
+}
+
+.card-content {
+  transform: translateY(100rem);
+  transition: transform 500ms ease;
+}
+.title {
+  position: relative;
+  font-size: 2rem;
+  transform: translateY(9em);
+  line-height: 1.15em;
+  transition: transform 250ms ease-in;
+}
+
+.card:hover .card {
+  opacity: 0.3;
+}
+
+.card:hover .title {
+  transform: translateY(0em);
+}
+
+.card:hover .card-content {
+  transition-delay: 1000ms;
+  transform: translateY(0rem);
+}
+
+.card:hover .title::after {
+  transform: scale(1);
+  transition-delay: 500ms;
+}
+
+button {
+  z-index: 1;
+  padding: 0.67rem;
+  border-radius: 0.99em;
+  border: none;
+  box-shadow: 2px 3px 2px gray;
+}
+@keyframes border {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+```
+
+</Preview>
+
+## card variant 3
+
+<Preview>
+<div class="preview-component-wrapper-wrapper">
+<div class="preview-component-wrapper" style="width:20em">
+<NeoCard />
+</div>
+</div>
+
+```html
+<div id=" . $id . " class="card feilds neo profile-card">
+  <div class="card-body">
+    <h5 class="card-title">title</h5>
+    <p class="card-text">description</p>
+  </div>
+</div>
+```
+
+```css
+.neo {
+  --neo-side1: top;
+  --neo-side2: right;
+  --neo-position: 0.5rem;
+  --neo-bg: white;
+  --neo-border: black;
+  z-index: 0;
+  position: relative;
+  border-radius: var(--neo-bdr-radius);
+}
+
+.profile-card {
+  cursor: pointer;
+}
+
+.neo::after {
+  border-radius: var(--neo-bdr-radius);
+  content: "";
+  border: 2px solid var(--neo-border);
+  position: absolute;
+  background-color: var(--neo-bg);
+  height: 100%;
+  width: 100%;
+  inset: 0;
+  z-index: -1;
+}
+
+.neo::before {
+  content: "";
+  position: absolute;
+  background-color: var(--neo-border);
+  border-radius: var(--neo-bdr-radius);
+  height: 100%;
+  width: 100%;
+  right: calc(var(--neo-position) * -1);
+  top: calc(var(--neo-position) * -1);
+  z-index: -1;
+}
+```
+
+</Preview>

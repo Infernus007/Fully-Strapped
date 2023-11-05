@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+import Card from "../../components/Card.astro";
+import CardLayout from "../../layouts/CardLayout.astro";
+import ComponentsPageLayout from "../../layouts/ComponentsPageLayout.astro";
+const allAssets = await getCollection("assets");
+---
+
+<ComponentsPageLayout
+  heroImageName="theme.jpg"
+  heroSecondaryTitle="Discover intuitive components"
+  heroTitle="Components"
+  title="Components"
+>
+  <CardLayout>
+    {
+      allAssets.map((asset) => (
+        <Card
+          url={"/Components/" + asset.slug}
+          img={asset.data.img}
+          description={asset.data.description}
+          title={asset.data.title}
+        />
+      ))
+    }
+  </CardLayout>
+</ComponentsPageLayout>

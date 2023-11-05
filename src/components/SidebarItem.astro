@@ -1,0 +1,28 @@
+---
+interface Props {
+  title?: string;
+  svgPath: string;
+  url?: string;
+}
+
+const { title, svgPath, url } = Astro.props;
+const id = title?.toLocaleLowerCase();
+---
+
+<a
+  class="navigation-drawer-item dark:text-white sidebar-item flex flex-col group mt-3 relative justify-center items-center w-[80px]"
+  aria-controls="navigationDrawer"
+  tabindex="0"
+  id={id}
+  data-sidebarItemHover={id}
+  role="link"
+  href={url}
+  aria-current="true"
+>
+  <span
+    class="w-3/4 h-full flex justify-center items-center rounded-3xl relative p-1 group-hover:bg-gray-200 dark:group-hover:bg-gray-600 transition-all ease-in group-focus:bg-blue-200"
+  >
+    <Fragment set:html={svgPath} />
+  </span>
+  <div class="text-xs group-hover:font-semibold">{title}</div>
+</a>

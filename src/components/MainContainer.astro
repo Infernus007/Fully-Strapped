@@ -1,0 +1,33 @@
+---
+import SearchInput from "./SearchInput.astro";
+
+interface Props {
+  title: string;
+  subtitle: string;
+  image?: string;
+}
+
+const { title, subtitle, image = "background.avif" } = Astro.props;
+---
+
+<main class="md:ml-[88px] z-20 relative text-white">
+  <div class="mx-3 mt-3">
+    <div
+      class="p-3 md:p-6 lg:p-12 text-center rounded-3xl bg-no-repeat bg-center bg-cover h-[25vh] lg:h-[calc(80vh-24px)]"
+      style={{ backgroundImage: `url(/${image})` }}
+    >
+      <div
+        class="mx-auto h-full flex flex-col gap-6 md:gap-9 justify-center items-center"
+      >
+        <div class="text-3xl md:text-4xl lg:text-9xl font-bold">
+          {title}
+        </div>
+        <p class="text-base md:text-lg">
+          {subtitle}
+        </p>
+      </div>
+
+      <!-- <SearchInput /> -->
+    </div>
+  </div>
+</main>

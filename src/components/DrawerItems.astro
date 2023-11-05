@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+  page: string;
+  items?: string[];
+}
+
+const { title, items, page } = Astro.props;
+---
+
+<ul
+  aria-label="home"
+  id={title + "-drawer-items"}
+  class="flex flex-col justify-center items-start gap-3 drawer-items"
+>
+  {
+    items?.map((e) => (
+      <a
+        href={page + "/" + e}
+        class="navigation-drawer-item dark:text-white  dark:hover:bg-gray-500 mx-auto ps-4 rounded-3xl hover:bg-gray-200 block w-[calc(100%-16px)] rounded-3x"
+      >
+        <li>
+          <button class="h-[44px]">{e}</button>
+        </li>
+      </a>
+    ))
+  }
+</ul>

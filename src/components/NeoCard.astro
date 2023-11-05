@@ -1,0 +1,47 @@
+<div id=" . $id . " class="card feilds neo profile-card h-96">
+  <div class="card-body">
+    <h5 class="card-title">title</h5>
+    <p class="card-text">description</p>
+  </div>
+</div>
+
+<style>
+  .neo {
+    --neo-side1: top;
+    --neo-side2: right;
+    --neo-position: 0.5rem;
+    --neo-bg: white;
+    --neo-border: black;
+    z-index: 0;
+    position: relative;
+    border-radius: var(--neo-bdr-radius);
+  }
+
+  .profile-card {
+    cursor: pointer;
+  }
+
+  .neo::after {
+    border-radius: var(--neo-bdr-radius);
+    content: "";
+    border: 2px solid var(--neo-border);
+    position: absolute;
+    background-color: var(--neo-bg);
+    height: 100%;
+    width: 100%;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .neo::before {
+    content: "";
+    position: absolute;
+    background-color: var(--neo-border);
+    border-radius: var(--neo-bdr-radius);
+    height: 100%;
+    width: 100%;
+    right: calc(var(--neo-position) * -1);
+    top: calc(var(--neo-position) * -1);
+    z-index: -1;
+  }
+</style>

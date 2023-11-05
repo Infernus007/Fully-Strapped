@@ -1,0 +1,16 @@
+{
+  "name": "search",
+  "version": "1.0.0",
+  "description": "",
+  "main": "prepare-index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aftab Alam",
+  "license": "ISC",
+  "devDependencies": {
+    "globby": "^13.2.2",
+    "mark.js": "^8.11.1"
+  }
+}

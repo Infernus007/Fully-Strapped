@@ -1,0 +1,145 @@
+<a
+  href="#discuss"
+  style="display: flex;"
+  data-hover=""
+  class="button-flex w-inline-block"
+  ><img
+    src="/btnicon.svg"
+    loading="eager"
+    width="40"
+    height="40"
+    alt="button icon"
+    data-hover-elem=""
+    class="icon-scale is-1"
+  /><div class="button is-small-simple bg-color-yellow">
+    <div class="button__texts">
+      <div data-hover-elem="" class="button__text-anim">
+        <div class="button__text">Button</div><div
+          class="button__text is-absolute"
+        >
+          Button
+        </div>
+      </div>
+    </div>
+  </div><img
+    src="/btnicon.svg"
+    loading="eager"
+    width="40"
+    height="40"
+    alt="button icon"
+    data-hover-elem=""
+    class="icon-scale is-2"
+  /></a
+>
+
+<style>
+  .button-flex {
+    z-index: 2;
+    flex: none;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    position: relative;
+    --black: black;
+    --goldenrod: goldenrod;
+  }
+  .button-flex:hover .icon-scale.is-1 {
+    height: 0;
+    width: 0;
+  }
+  .button-flex:hover .icon-scale.is-2 {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+  .button-flex:hover .button__text-anim {
+    transform: translateY(-150%);
+  }
+
+  .w-inline-block {
+    max-width: 100%;
+    display: inline-block;
+  }
+
+  .icon-scale {
+    width: 2.5rem;
+    height: 2.5rem;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    display: block;
+  }
+
+  .button.is-small-simple {
+    height: 2.5rem;
+    grid-column-gap: 0rem;
+    grid-row-gap: 0rem;
+    padding: 0.5rem 1.5rem;
+  }
+  .button.bg-color-yellow {
+    color: var(--black);
+  }
+  .bg-color-yellow {
+    background-color: var(--goldenrod);
+  }
+  .button__texts {
+    z-index: 1;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .button__text-anim {
+    transition: transform 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    position: relative;
+    transform: translate(0);
+  }
+  .button__text {
+    flex: none;
+    display: block;
+  }
+  .button__text.is-absolute {
+    position: absolute;
+    top: 0%;
+    bottom: 0%;
+    left: 0%;
+    right: 0%;
+    transform: translateY(150%);
+  }
+
+  .icon-scale.is-2 {
+    width: 0;
+    height: 0;
+  }
+  .icon-scale {
+    width: 2.5rem;
+    height: 2.5rem;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    display: block;
+  }
+
+  .button.is-small-simple {
+    height: 2.5rem;
+    grid-column-gap: 0rem;
+    grid-row-gap: 0rem;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .button {
+    z-index: 2;
+    grid-column-gap: 1.5rem;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: #3827c7;
+    border-radius: 20rem;
+    justify-content: center;
+    align-items: center;
+    padding: 1.1rem 0.75rem 1.1rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    transition: all 0.4s;
+    display: flex;
+    position: relative;
+    transform: translate(0);
+  }
+</style>

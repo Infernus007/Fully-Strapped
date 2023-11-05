@@ -1,0 +1,51 @@
+<button class="neo-button">Neo-Button</button>
+
+<style>
+  .neo-button {
+    background: #fbca1f;
+    font-family: inherit;
+    padding: 0.6em 1.3em;
+    font-weight: 900;
+    font-size: 18px;
+    border: 3px solid black;
+    border-radius: 0.4em;
+    width: fit-content;
+    box-shadow: 0.1em 0.1em;
+  }
+
+  .neo-button:hover {
+    transform: translate(-0.05em, -0.05em);
+    box-shadow: 0.15em 0.15em;
+
+    animation: workspace-labs-gradient 2100ms infinite linear;
+    background: linear-gradient(
+      135deg,
+      #d3e3fd,
+      #d0f8ff,
+      #a8c7fa,
+      #99f0ff,
+      #d3e3fd,
+      #d3e3fd,
+      #d0f8ff,
+      #a8c7fa,
+      #99f0ff,
+      #d3e3fd
+    );
+    background-size: auto;
+    background-size: 800% 800%;
+  }
+
+  .neo-button:active {
+    transform: translate(0.05em, 0.05em);
+    box-shadow: 0.05em 0.05em;
+  }
+
+  @keyframes workspace-labs-gradient {
+    0% {
+      background-position: 100% 100%;
+    }
+    100% {
+      background-position: 37.5% 37.5%;
+    }
+  }
+</style>

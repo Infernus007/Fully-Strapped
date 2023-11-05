@@ -1,0 +1,64 @@
+---
+import Moon from "/moon.svg?raw";
+import Sun from "/sun.svg?raw";
+---
+
+<div class="toggler cursor-pointer dark:text-white">
+  <div
+    class="w-[40px] overflow-hidden mb-4 h-[40px] rounded-full relative grid outline outline-1"
+  >
+    <div
+      id="moon"
+      class="absolute w-[25px] dark:text-white transition-transform ease-in duration-150 h-[25px] -translate-y-10 justify-self-center bg-no-repeat bg-center bg-cover self-center"
+      style={{ backgroundImage: `url(/moon.svg)` }}
+    >
+    </div>
+    <div
+      id="sun"
+      class="absolute w-[25px] transition-transform ease-in duration-150 h-[25px] justify-self-center bg-no-repeat bg-center bg-cover self-center"
+      style={{ backgroundImage: `url(/sun.svg)` }}
+    >
+    </div>
+  </div>
+</div>
+
+<script>
+  import $ from "jquery";
+
+  $(function () {
+    let sun = $("#sun");
+    let moon = $("#moon");
+    const html = $("html");
+
+    // Check local storage for the theme
+    const currentTheme = localStorage.getItem("theme");
+    console.log(currentTheme);
+
+    if (currentTheme) {
+      html.addClass(currentTheme);
+      if (currentTheme === "dark") {
+        moon.removeClass("-translate-y-10");
+        sun.addClass("translate-y-10");
+        html.addClass("dark");
+      } else {
+        sun.removeClass("translate-y-10");
+        moon.addClass("-translate-y-10");
+        html.removeClass("dark");
+      }
+    }
+
+    $(".toggler").click(function (e) {
+      if (moon.hasClass("-translate-y-10")) {
+        moon.removeClass("-translate-y-10");
+        sun.addClass("translate-y-10");
+        localStorage.setItem("theme", "dark");
+        html.addClass("dark");
+      } else {
+        sun.removeClass("translate-y-10");
+        moon.addClass("-translate-y-10");
+        localStorage.setItem("theme", "light");
+        html.removeClass("dark");
+      }
+    });
+  });
+</script>

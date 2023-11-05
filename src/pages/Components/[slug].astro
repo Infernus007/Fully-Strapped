@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import SingleComponentPageLayout from "../../layouts/SingleComponentPageLayout.astro";
+export async function getStaticPaths() {
+  const allAssets = await getCollection("assets");
+
+  return allAssets.map((asset) => ({
+    params: { slug: asset.slug },
+    props: {
+      asset: asset,
+    },
+  }));
+}
+
+const { asset } = Astro.props;
+const { Content, headings } = await asset.render();
+---
+
+<SingleComponentPageLayout headings={headings}>
+  <Content />
+</SingleComponentPageLayout>

@@ -1,0 +1,114 @@
+<div class="flex">
+  <div id="text-section" class="overflow-scroll max-h-[75vh] dark:text-white">
+    <div id="section1" class="h-[75vh] section">
+      <strong class="text-3xl">Why</strong>
+      <p class="mt-10">
+        The reason for creating this website was to create a portal of different
+        isIntersecting web application utilities I have discovered over years ,
+        essentially a dear diary or journal
+      </p>
+      <p>
+        I know there are several way better libraries like Bootstrap , next ui ,
+        code pen , etc , <b>so whats the point ?</b>
+         well i wanted to create something of my own which could better my
+        experience of documenting and creating various Front end resources
+      </p>
+    </div>
+    <div id="section2" class="h-[75vh] section">
+      <strong class="text-3xl">Future</strong>
+      <p class="mt-10">
+        I am going to keep extending and polishing this application this is at
+        its beta phase at this moment but this is a kind of application that is
+        not going to be <blockquote>Complete</blockquote> as i am going to keep
+        on discovering new things
+      </p>
+    </div>
+    <div id="section3" class="h-[75vh] section">
+      <strong class="text-3xl">Community</strong>
+      <p class="mt-10">
+        Its quite a milestone to even thinking about doing so but I plan to
+        invite some of my friends in this , there is a long shot before I make
+        this even more accessible for others to collaborate on but hey , I am
+        planning to
+      </p>
+    </div>
+    <!-- Add more sections as needed -->
+  </div>
+  <div id="image-section" class="overflow-hidden max-h-screen bg-cover rounded">
+    <div
+      id="img-section1"
+      class="h-full w-full bg-cover image visible"
+      style={{ backgroundImage: `url(/theme.jpg)` }}
+    >
+    </div>
+    <div
+      id="img-section2"
+      class="h-full w-full image bg-cover"
+      style={{ backgroundImage: `url(/layouts.jpg)` }}
+    >
+    </div>
+    <div
+      id="img-section3"
+      class="h-full w-full image bg-cover"
+      style={{ backgroundImage: `url(/components.jpg)` }}
+    >
+    </div>
+  </div>
+</div>
+
+<style>
+  #text-section {
+    width: 50%;
+    overflow-y: scroll;
+    padding: 20px;
+  }
+
+  #image-section {
+    width: 50%;
+    position: relative;
+  }
+
+  .image {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .image.visible {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+  }
+</style>
+
+<script>
+  //@ts-nocheck
+  const sections = document.querySelectorAll(".section");
+  const images = document.querySelectorAll(".image");
+  const options = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.5, // Adjust this threshold as needed
+  };
+
+  const callback = (entries, observer) => {
+    images.forEach((image, i) => {
+      image.classList.remove("visible");
+    });
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("Element with ID:", entry.target.id, "is now visible");
+        let img = "img-" + entry.target.id;
+        let imgToShow = document.getElementById(img);
+        imgToShow?.classList.add("visible");
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver(callback, options);
+
+  sections.forEach((section) => {
+    observer.observe(section);
+  });
+</script>

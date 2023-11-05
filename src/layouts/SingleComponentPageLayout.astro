@@ -1,0 +1,293 @@
+---
+import Sidebar from "../components/Sidebar.astro";
+import TableOfContent from "../components/TableOfContent.astro";
+import Layout from "./Layout.astro";
+const { headings } = Astro.props;
+---
+
+<Layout title="Single components">
+  <Sidebar />
+  <main class="md:ml-[88px] z-20 relative">
+    <div class="w-[95%] mx-auto flex gap-2">
+      <div class="w-full md:w-3/4">
+        <slot />
+      </div>
+      <TableOfContent headings={headings} />
+    </div>
+  </main>
+</Layout>
+<style is:global>
+  :root {
+    --accent: 136, 58, 234;
+    --accent-light: 224, 204, 250;
+    --accent-dark: 49, 10, 101;
+    --accent-gradient: linear-gradient(
+      45deg,
+      rgb(var(--accent)),
+      rgb(var(--accent-light)) 30%,
+      white 60%
+    );
+  }
+  html {
+    font-family: system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+  code {
+    font-family:
+      Menlo,
+      Monaco,
+      Lucida Console,
+      Liberation Mono,
+      DejaVu Sans Mono,
+      Bitstream Vera Sans Mono,
+      Courier New,
+      monospace;
+  }
+
+  .copy-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.45rem;
+  }
+  .copy-button div {
+    width: fit-content;
+    cursor: pointer;
+  }
+
+  .preview div:not(div:has(pre)):not(.preview-component-wrapper-wrapper div) {
+    margin-top: 1em;
+  }
+  .preview-component-wrapper-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-block: 1em;
+  }
+</style>
+
+<script>
+  import $ from "jquery";
+  let copyButtonLabel = `
+  <div>
+  <div class="copy-button">
+  <div class="flex gap-2 justify-center items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+      </svg>
+      </div>
+      </div>
+      </div>
+      `;
+
+  let initialButtonLabel = `
+  <div>
+    <div class="copy-button">
+    <div class="ml-auto flex gap-2 justify-center items-center ">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-clipboard" viewBox="0 0 16 16">
+        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+      </svg>
+      </div>
+      </div>
+      </div>`;
+
+  let copiedButtonLabel = `
+  <div>
+    <div class="copy-button">
+    <div class="ml-auto w-fit flex gap-2 justify-center items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
+        <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z"/>
+        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z"/>
+      </svg>
+      </div>
+      </div>
+      </div>`;
+
+  $(document).ready(function () {
+    // Select all .preview elements
+    const $previewElements = $(".preview");
+
+    console.log($previewElements);
+    $previewElements.each(function (index) {
+      // Select the HTML and CSS 'pre' elements inside each .preview
+      const $htmlPre = $(this).find("pre:first")[0];
+      const $cssPre = $(this).find("pre:last")[0];
+      // Generate unique IDs for tab elements
+      const tabId = `pills-tab-${index}`;
+      const htmlTabId = `pills-html-${index}`;
+      const cssTabId = `pills-css-${index}`;
+
+      // Create the HTML tab button and content
+      const $htmlTabButton = $("<button>")
+        .addClass("bg-blue-300  px-2 py-1 me-2 rounded-t-lg")
+        .attr("data-toggle", "pill")
+        .attr("data-target", `#${htmlTabId}`)
+        .attr("type", "button")
+        .attr("role", "tab")
+        .attr("aria-controls", htmlTabId)
+
+        .text("HTML");
+
+      const $cssTabButton = $("<button>")
+        .addClass("bg-slate-100 px-2 py-1 rounded-t-lg")
+        .attr("data-toggle", "pill")
+        .attr("data-target", `#${cssTabId}`)
+        .attr("type", "button")
+        .attr("role", "tab")
+        .attr("aria-controls", cssTabId)
+        .text("CSS");
+
+      const $htmlTabContent = $("<div>")
+        .attr("id", htmlTabId)
+        .attr("role", "tabpanel")
+        .attr("aria-labelledby", htmlTabId)
+        .attr("tabindex", "0")
+        .append($htmlPre);
+
+      // Create the CSS tab button and content
+
+      const $cssTabContent = $("<div>")
+        .addClass("tab-pane" + (index === 0 ? " active" : " hidden"))
+        .attr("id", cssTabId)
+        .attr("role", "tabpanel")
+        .attr("aria-labelledby", cssTabId)
+        .attr("tabindex", "0")
+        .attr("class", "hidden")
+        .append($cssPre);
+
+      // Insert the tab buttons and content
+      const $navItemHtml = $("<li>")
+        .addClass("nav-item")
+        .attr("role", "presentation")
+        .append($htmlTabButton);
+
+      const $navItemCss = $("<li>")
+        .addClass("nav-item")
+        .attr("role", "presentation")
+        .append($cssTabButton);
+
+      const $tabsDiv = $("<div>").addClass("tabs");
+      $tabsDiv.append(
+        $htmlTabButton,
+        $cssTabButton,
+        $htmlTabContent,
+        $cssTabContent
+      );
+
+      // Insert the 'tabs' div inside the current .preview element
+      $(this).append($tabsDiv);
+      // Remove the original 'pre' elements
+      // $htmlPre.remove();
+      // $cssPre.remove();
+    });
+
+    function handleTabToggle(targetTabId: string) {
+      const $targetTab = $(`#${targetTabId}`);
+      console.log($targetTab);
+      const $otherTabs = $targetTab.siblings("div");
+
+      console.log($otherTabs);
+
+      if ($targetTab.is(":hidden")) {
+        $targetTab.fadeIn();
+        $otherTabs.fadeOut();
+      }
+    }
+    $(
+      'div[style="position: relative;"] pre.astro-code.dracula.rounded.p-4:empty'
+    ).remove();
+
+    $("[data-toggle='pill']").click(function (e) {
+      let targetTabId = $(e.target).data("target").substring(1); // Remove the "#" from the data-target value
+      $(e.target).siblings("button").removeClass("bg-blue-300");
+      $(e.target).siblings("button").addClass("bg-slate-100");
+
+      // Add the class to the clicked element
+      $(e.target).removeClass("bg-slate-100");
+      $(e.target).addClass("bg-blue-300");
+      handleTabToggle(targetTabId);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const headingFragment = `#${entry.target.id}`;
+          const tocItem = document.querySelector(
+            `a[href="${headingFragment}"]`
+          );
+
+          if (entry.isIntersecting) {
+            const previouslyActivatedItem =
+              document.querySelector(".active-toc-item");
+
+            previouslyActivatedItem?.classList.remove("active-toc-item");
+            tocItem?.classList.add("active-toc-item");
+            console.error("intersecting");
+          } else {
+            const isAnyOtherEntryIntersecting = entries.some(
+              (e) => e.target.id !== entry.target.id && e.isIntersecting
+            );
+
+            if (isAnyOtherEntryIntersecting) {
+              tocItem?.classList.remove("active-toc-item");
+            }
+          }
+        }
+      },
+      { root: null, rootMargin: "0px", threshold: [1] }
+    );
+
+    const sectionHeadings = document.querySelectorAll(
+      "article > h2, article > h3"
+    );
+
+    for (const heading of sectionHeadings) {
+      observer.observe(heading);
+      console.warn("attached");
+    }
+
+    let codeBlocks = Array.from(document.querySelectorAll("pre"));
+    console.log(codeBlocks);
+    for (let codeBlock of codeBlocks) {
+      let wrapper = document.createElement("div");
+      wrapper.style.position = "relative";
+
+      let copyButton = document.createElement("div");
+      copyButton.className = "copy-code";
+      copyButton.innerHTML = initialButtonLabel;
+
+      codeBlock.setAttribute("tabindex", "0");
+      wrapper.appendChild(copyButton);
+      // wrap code block with relative parent element
+      codeBlock?.parentNode?.append(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+
+    async function copyCode(block: HTMLPreElement, button: HTMLDivElement) {
+      let code = block.querySelector("code");
+      let text = code?.innerText;
+
+      if (text) await navigator.clipboard.writeText(text);
+
+      // Change button label to "Code Copied"
+      button.innerHTML = copiedButtonLabel;
+
+      setTimeout(() => {
+        // Revert back to the initial button label after some time
+        button.innerHTML = initialButtonLabel;
+      }, 2000); // Change back after 2 seconds (adjust as needed)
+    }
+  });
+</script>
+
+<style>
+  .active-toc-item {
+    font-weight: bold;
+  }
+</style>
