@@ -18,17 +18,16 @@ const config = defineConfig({
           img: "border border-slate-300 dark:border-zinc-708 rounded-x1 mb-6",
           p: "mb-6",
           a: "underline underline-offset-2 hover: text-orange-500 decoration-orange-500",
-          pre: "rounded p-4 bg-red-200 max-h-[200px] overflow-scroll",
+          pre: " p-4  break-words max-h-[550px]",
         },
       ],
     ],
   },
-
   integrations: [
     tailwind(),
     mdx({
       syntaxHighlight: "shiki",
-      shikiConfig: { theme: "dracula" },
+      shikiConfig: { theme: "material-theme-lighter" },
       remarkRehype: { footnoteLabel: "Footnotes" },
       gfm: false,
       optimize: true,

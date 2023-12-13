@@ -3,7 +3,18 @@
 ---
 
 <style></style>
-
-<div class="preview flex flex-col justify-center">
-  <slot />
+<div
+  class="preview-wrapper flex flex-col justify-start max-w-[1200px] rounded container mx-auto"
+>
+<div>
+ <slot name="description"/> 
+</div>
+  <div class="element-wrapper p-5 border border-slate-500 ">
+    <div class="flex justify-center items-center max-w-[90%]">
+      <slot name="element" />
+    </div>
+  </div>
+  <div class="preview flex flex-col justify-center">
+    <slot />
+  </div>
 </div>

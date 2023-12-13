@@ -1,8 +1,8 @@
 ---
-title: card
+title: Card
 description: Minimalistic card designs
-img : m2.jpg
-
+img: m2.jpg
+slug: Card
 ---
 
 import Preview from "../../components/Preview.astro";
@@ -10,17 +10,14 @@ import Card from "../../components/Card.astro";
 import NeoCard from "../../components/NeoCard.astro";
 import CardHoverBorder from "../../components/CardHoverBorder.astro";
 
-## Cards variant - 1
-
 <Preview>
-<div class="preview-component-wrapper-wrapper">
-<div class="preview-component-wrapper">
-<Card />
+<div slot="description">
+## Cards variant - 1
 </div>
-</div>
+
+<Card slot="element" />
 
 ```html
-
 <div class="card-wrapper">
   <a
     class="card"
@@ -28,7 +25,7 @@ import CardHoverBorder from "../../components/CardHoverBorder.astro";
   >
     <div
       class="card-img-top"
-      style={{ backgroundImage: `url(/${img})` }}
+      style={{ backgroundImage: `url(/example.img)` }}
     >
     </div>
 
@@ -83,14 +80,12 @@ import CardHoverBorder from "../../components/CardHoverBorder.astro";
 
 </Preview>
 
-## Cards variant - 2
-
 <Preview>
-<div class="preview-component-wrapper-wrapper">
-<div class="preview-component-wrapper">
-<CardHoverBorder />
+<div slot="description">
+## Cards variant - 2
 </div>
-</div>
+
+<CardHoverBorder slot="element" />
 
 ```html
 <div class="card">
@@ -228,63 +223,3 @@ button {
 
 </Preview>
 
-## card variant 3
-
-<Preview>
-<div class="preview-component-wrapper-wrapper">
-<div class="preview-component-wrapper" style="width:20em">
-<NeoCard />
-</div>
-</div>
-
-```html
-<div id=" . $id . " class="card feilds neo profile-card">
-  <div class="card-body">
-    <h5 class="card-title">title</h5>
-    <p class="card-text">description</p>
-  </div>
-</div>
-```
-
-```css
-.neo {
-  --neo-side1: top;
-  --neo-side2: right;
-  --neo-position: 0.5rem;
-  --neo-bg: white;
-  --neo-border: black;
-  z-index: 0;
-  position: relative;
-  border-radius: var(--neo-bdr-radius);
-}
-
-.profile-card {
-  cursor: pointer;
-}
-
-.neo::after {
-  border-radius: var(--neo-bdr-radius);
-  content: "";
-  border: 2px solid var(--neo-border);
-  position: absolute;
-  background-color: var(--neo-bg);
-  height: 100%;
-  width: 100%;
-  inset: 0;
-  z-index: -1;
-}
-
-.neo::before {
-  content: "";
-  position: absolute;
-  background-color: var(--neo-border);
-  border-radius: var(--neo-bdr-radius);
-  height: 100%;
-  width: 100%;
-  right: calc(var(--neo-position) * -1);
-  top: calc(var(--neo-position) * -1);
-  z-index: -1;
-}
-```
-
-</Preview>

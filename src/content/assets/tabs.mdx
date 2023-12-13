@@ -1,21 +1,19 @@
 ---
-title: tabs
+title: Tabs
 description: tabs can be used to display content in a intuitive way
 img: components.jpg
+slug: Tabs
 ---
 
 import Preview from "../../components/Preview.astro";
 import Tab from "../../components/Tabs.astro";
 import MuiTab from "../../components/MuiTab.astro";
 
-## Tab variant 1
-
 <Preview>
-<div class="preview-component-wrapper-wrapper">
-<div class="preview-component-wrapper" >
-<Tab />
+<div slot="description">
+## Tab variant 1
 </div>
-</div>
+<Tab slot="element"/>
 
 ```html
 <div class="container">
@@ -105,14 +103,11 @@ import MuiTab from "../../components/MuiTab.astro";
 
 </Preview>
 
-## Tab variant 2
-
 <Preview>
-<div class="preview-component-wrapper-wrapper">
-<div class="preview-component-wrapper" style="min-width:50em;">
-<MuiTab />
+<div slot="description">
+## Tab variant 2
 </div>
-</div>
+<MuiTab slot="element"/>
 
 ```html
 <div class="tabs">

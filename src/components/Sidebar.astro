@@ -18,37 +18,189 @@ const allLayouts = await getCollection("layouts");
 const layouts = allLayouts.map((e) => e.data.title);
 ---
 
-<header class="">
-  <div
-    id="sidebar"
-    class="fixed -start-24 flex flex-col justify-between items-center md:top-0 md:start-0 peer overflow-auto h-full z-50 bg-slate-100 dark:bg-gray-800"
-  >
-    <nav
-      aria-label="navigation-rail"
-      class="relative w-[88px] flex flex-col gap-4"
-    >
-      <SidebarItem svgPath={HomeIcon} title="Home" url="/" />
-      <SidebarItem
-        svgPath={ComponentIcon}
-        title="Components"
-        url="/Components"
-      />
-      <SidebarItem svgPath={LayoutIcon} title="Layouts" url="/Layouts" />
-      <SidebarItem svgPath={SearchIcon} title="Search" url="/Search" />
-    </nav>
-    <ThemeToggler />
-  </div>
-  <aside
-    aria-label="navigation-drawer"
-    class="w-[230px] border-l-2 border-gray-400 dark:border-white top-0 bottom-0 fixed -translate-x-[calc(230px+88px)] hover:translate-x-[88px] peer-hover:translate-x-[88px] transition-transform ease-linear duration-300 rounded-tr-2xl rounded-br-2xl bg-slate-100 dark:bg-gray-800 h-full z-40"
-  >
-    <div aria-label="navigation-drawer-items" class="mt-3">
-      <DrawerItems title="home" items={["About"]} page="./" />
-      <DrawerItems title="components" items={components} page="/Components" />
-      <DrawerItems title="layouts" items={layouts} page="/Layouts" />
+<div class="wrapper">
+  <div class="navigation-rail-wrapper">
+    <div class="navigation-rail">
+      <div class="navigation">
+        <nav class="navigation-items">
+          <a role="button" href="#" class="navigation-item">
+            <span class="navigation-item-icon">
+              <i class="fa-solid fa-house"></i>
+            </span>
+            <div class="navigation-item-label">Home</div>
+            <div class="spacer"></div>
+          </a>
+          <a
+            data-drawer-target="components"
+            role="button"
+            href="#"
+            class="navigation-item"
+          >
+            <span class="navigation-item-icon">
+              <i class="fa-solid fa-house"></i>
+            </span>
+            <div class="navigation-item-label">Components</div>
+            <div class="spacer"></div>
+            <div class="navigation-item-following-icon">
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </a>
+
+          <a
+            data-drawer-target="styles"
+            role="button"
+            href="#"
+            class="navigation-item"
+          >
+            <span class="navigation-item-icon">
+              <i class="fa-solid fa-star-of-david"></i>
+            </span>
+            <div class="navigation-item-label">Styles</div>
+            <div class="spacer"></div>
+
+            <div class="navigation-item-following-icon">
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </a>
+        </nav>
+      </div>
+
+      <div class="theme-toggler" role="button">
+        <div class="toggler">
+          <span class="icon" id="sun">
+            <i class="fa-solid fa-sun fa-2xl"></i>
+          </span>
+          <span class="icon" id="moon">
+            <i class="fa-solid fa-moon fa-2xl"></i>
+          </span>
+        </div>
+        <div class="toggler__label">
+          <span>Change the theme</span>
+        </div>
+      </div>
     </div>
-  </aside>
-</header>
+  </div>
+
+  <div class="navigation-drawer">
+    <aside class="drawer-wrapper" aria-expanded="false">
+      <nav class="drawer-navigation">
+        <div data-drawer="components" class="drawer-navigation-items">
+          <a role="button" href="#" class="drawer-navigation-item drawer-close">
+            <span class="drawer-navigation-item-icon">
+              <i class="fa-solid fa-arrow-left"></i>
+            </span>
+            <span class="drawer-navigation-item-label">Main menu</span>
+            <span class="spacer"></span>
+            <span class="drawer-navigation-item-following-icon"> </span>
+          </a>
+
+          
+          <div
+            role="button"
+            class="drawer-navigation-dropdown-item"
+            aria-expanded="false"
+          >
+            <div class="drawer-navigation-item-toggler">
+              <span class="drawer-navigation-item-icon">
+                <i class="fa-solid fa-fire fa-lg"></i>
+              </span>
+              <span class="drawer-navigation-item-label">Dropdown Item</span>
+              <span class="spacer"></span>
+              <span class="drawer-navigation-item-following-icon">
+                <i class="fa-brands fa-vaadin fa-sm"></i>
+              </span>
+            </div>
+
+            <div class="dropdown-items">
+              <!-- drop down item -->
+
+              <!-- item 1 -->
+              <a href="#" class="drawer-navigation-item dropdown-item">
+                <span class="drawer-navigation-item-icon">
+                  <i class="fa-solid fa-fire fa-lg"></i>
+                </span>
+                <span class="drawer-navigation-item-label">Normal Item 1</span>
+                <span class="spacer"></span>
+                <span class="drawer-navigation-item-following-icon"> </span>
+              </a>
+              <!-- item 2 -->
+              <a href="#" class="drawer-navigation-item dropdown-item">
+                <span class="drawer-navigation-item-icon">
+                  <i class="fa-solid fa-fire fa-lg"></i>
+                </span>
+                <span class="drawer-navigation-item-label">Normal Item 2</span>
+                <span class="spacer"></span>
+                <span class="drawer-navigation-item-following-icon"> </span>
+              </a>
+
+              <!-- drop down items end -->
+            </div>
+          </div>
+        </div>
+        <div data-drawer="styles" class="drawer-navigation-items">
+          <a role="button" href="#" class="drawer-navigation-item drawer-close">
+            <span class="drawer-navigation-item-icon">
+              <i class="fa-solid fa-arrow-left"></i>
+            </span>
+            <span class="drawer-navigation-item-label">Main menu</span>
+            <span class="spacer"></span>
+            <span class="drawer-navigation-item-following-icon"> </span>
+          </a>
+
+          <a role="button" href="#" class="drawer-navigation-item">
+            <span class="drawer-navigation-item-icon">
+              <i class="fa-solid fa-fire fa-lg"></i>
+            </span>
+            <span class="drawer-navigation-item-label">Normal Item 2</span>
+            <span class="spacer"></span>
+            <span class="drawer-navigation-item-following-icon"> </span>
+          </a>
+          <div
+            role="button"
+            class="drawer-navigation-dropdown-item"
+            aria-expanded="false"
+          >
+            <div class="drawer-navigation-item-toggler">
+              <span class="drawer-navigation-item-icon">
+                <i class="fa-solid fa-fire fa-lg"></i>
+              </span>
+              <span class="drawer-navigation-item-label">Dropdown Item 3</span>
+              <span class="spacer"></span>
+              <span class="drawer-navigation-item-following-icon">
+                <i class="fa-brands fa-vaadin fa-sm"></i>
+              </span>
+            </div>
+
+            <div class="dropdown-items">
+              <!-- drop down item -->
+
+              <!-- item 1 -->
+              <a href="#" class="drawer-navigation-item dropdown-item">
+                <span class="drawer-navigation-item-icon">
+                  <i class="fa-solid fa-fire fa-lg"></i>
+                </span>
+                <span class="drawer-navigation-item-label">Normal Item 1</span>
+                <span class="spacer"></span>
+                <span class="drawer-navigation-item-following-icon"> </span>
+              </a>
+              <!-- item 2 -->
+              <a href="#" class="drawer-navigation-item dropdown-item">
+                <span class="drawer-navigation-item-icon">
+                  <i class="fa-solid fa-fire fa-lg"></i>
+                </span>
+                <span class="drawer-navigation-item-label">Normal Item 2</span>
+                <span class="spacer"></span>
+                <span class="drawer-navigation-item-following-icon"> </span>
+              </a>
+
+              <!-- drop down items end -->
+            </div>
+          </div>
+        </div>
+      </nav>
+    </aside>
+  </div>
+</div>
 
 <script>
   import $ from "jquery";

@@ -1,22 +1,21 @@
 ---
-title: forms
+title: Forms
 description: Different types of form elements
-img : m3.jpg
-
+img: m3.jpg
+slug: Forms
 ---
 
 import Preview from "../../components/Preview.astro";
 import Form from "../../components/Form.astro";
 
-### Form
 
 <Preview>
-<div class="preview-component-wrapper-wrapper">
-<div class="preview-component-wrapper" style="margin-bottom:5em;height: 28em;width: 100%;display: flex;justify-content: center;">
+<div slot="description">
+## Form
+</div>
+<div  class="h-[600px]" slot="element">
 <Form />
 </div>
-</div>
-
 ```html
 <div class="wrapper" style="margin-top:5em;">
   <div class="card-switch">

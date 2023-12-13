@@ -1,5 +1,5 @@
 // 1. Import utilities from `astro:content`
-import { z, defineCollection } from "astro:content";
+import { z, defineCollection, getCollection } from "astro:content";
 
 // 2. Define a `type` and `schema` for each collection
 const assetCollection = defineCollection({
@@ -22,3 +22,17 @@ export const collections = {
   assets: assetCollection,
   layouts: layoutCollection,
 };
+
+//element's order matter , it should be same as the order defined in `collections` object above
+const collectionIcons = [
+  '<i class="fa-solid fa-cube"></i>',
+  '<i class="fa-regular fa-map"></i>',
+];
+
+const collectionNames = Object.keys(collections);
+
+export const collectionObj: { name: string; icon: string }[] =
+  collectionNames.map((name, index) => ({
+    name,
+    icon: collectionIcons[index],
+  }));

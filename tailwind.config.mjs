@@ -32,13 +32,15 @@ const classesArray = [
   "hover:text-orange-500",
   "decoration-orange-500",
   "rounded",
+  "break-words",
   "p-4",
   "mx-2",
   "mt-5",
   "dark:text-white",
   "bg-red-200",
-  "max-h-[200px]",
+  "max-h-[550px]",
   "overflow-scroll",
+  "rounded-2xl",
 ];
 
 export default {

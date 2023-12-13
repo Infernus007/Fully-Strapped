@@ -1,0 +1,50 @@
+---
+import SidebarItem from "./SidebarItem.astro";
+
+type dropDownItem = {
+  url: string;
+  title: string;
+  icon: HTMLElement;
+};
+
+interface Props {
+  title?: string;
+  fontAwesomeIcon: HTMLElement;
+  items: Array<dropDownItem>;
+}
+
+const { title, fontAwesomeIcon, items } = Astro.props;
+const id = title?.toLocaleLowerCase();
+---
+
+<div
+  role="button"
+  class="drawer-navigation-dropdown-item"
+  aria-expanded="false"
+>
+  <div class="drawer-navigation-item-toggler">
+    <span class="drawer-navigation-item-icon">
+      {fontAwesomeIcon}
+    </span>
+    <span class="drawer-navigation-item-label">{title}</span>
+    <span class="spacer"></span>
+    <span class="drawer-navigation-item-following-icon">
+      <i class="fa-brands fa-vaadin fa-sm"></i>
+    </span>
+  </div>
+
+  <div class="dropdown-items">
+    <!-- drop down item -->
+
+    {
+      items.map((e) => {
+        <a href={e.url} class="drawer-navigation-item dropdown-item">
+          <span class="drawer-navigation-item-icon">{e.icon}</span>
+          <span class="drawer-navigation-item-label">{e.title}</span>
+          <span class="spacer" />
+          <span class="drawer-navigation-item-following-icon"> </span>
+        </a>;
+      })
+    }
+  </div>
+</div>

@@ -1,8 +1,55 @@
 ---
+import Sidebar from "../components/Sidebar.astro";
+import { collectionObj } from "../content/config";
+import { getCollection, getEntry } from "astro:content";
+import { ViewTransitions } from "astro:transitions";
 interface Props {
   title: string;
 }
 
+//@ts-ignore
+const allComponents = await getCollection("assets");
+const components = allComponents
+  .map(
+    (e) =>
+      `<a role="button"  href="/Assets/${e.data.title}" 
+      class="drawer-navigation-item">
+      <span class="drawer-navigation-item-icon">
+        <i class="fa-solid fa-fire fa-lg dark:text-white"></i>
+      </span>
+      <span class="drawer-navigation-item-label dark:text-white">${
+        e.data.title.charAt(0).toUpperCase() + e.data.title.slice(1)
+      }</span>
+      <span class="spacer"></span>
+      <span class="drawer-navigation-item-following-icon"> </span>
+    </a>`
+  )
+  .join("");
+
+const allLayouts = await getCollection("layouts");
+const layouts = allLayouts
+  .map(
+    (e) =>
+      `<a role="button"  href="/Layouts/${
+        e.data.title
+      }" class="drawer-navigation-item">
+      <span class="drawer-navigation-item-icon dark:text-white">
+        <i class="fa-solid fa-fire fa-lg "></i>
+      </span>
+      <span class="drawer-navigation-item-label dark:text-white">${
+        e.data.title.charAt(0).toUpperCase() + e.data.title.slice(1)
+      }</span>
+      <span class="spacer"></span>
+      <span class="drawer-navigation-item-following-icon"> </span>
+    </a>`
+  )
+  .join("");
+
+//TODO:make this dynamic
+// for now this must be done for it to be working
+let data: string[] = [components, layouts];
+
+console.log(collectionObj);
 const { title } = Astro.props;
 ---
 
@@ -12,41 +59,923 @@ const { title } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width" />
-
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
     <title>{title}</title>
+
+    <ViewTransitions />
   </head>
-  <body class="dark:bg-gray-600">
-    <slot />
+  <body class="dark:bg-gray-600" transition:animate="fade">
+    <div class="sidebar-items dark:bg-gray-500">
+      <div class="sidebar-toggler" transition:persist>
+        <span class="sidebar-toggler-icon">
+          <i class="fa-solid fa-bars"></i>
+        </span>
+        <span class="sidebar-toggler-icon">
+          <i class="fa-solid fa-bars-staggered"></i>
+        </span>
+      </div>
+
+      <span>Fully Strapped</span>
+    </div>
+
+    <div class="wrapper">
+      <div class="navigation-rail-wrapper">
+        <div class="navigation-rail">
+          <div class="navigation">
+            <nav class="navigation-items">
+              <a role="button" href="/" class="navigation-item">
+                <span class="navigation-item-icon">
+                  <i class="fa-solid fa-house"></i>
+                </span>
+                <div class="navigation-item-label">Home</div>
+                <div class="spacer"></div>
+              </a>
+              {
+                collectionObj.map((e) => (
+                  <a
+                    transition:persist
+                    data-drawer-target={e.name}
+                    role="button"
+                    href={
+                      "/" + e.name.charAt(0).toUpperCase() + e.name.slice(1)
+                    }
+                    class="navigation-item "
+                  >
+                    <span class="navigation-item-icon">
+                      <span set:html={e.icon} />
+                    </span>
+                    <div class="navigation-item-label">
+                      {e.name.charAt(0).toUpperCase() + e.name.slice(1)}
+                    </div>
+                    <div class="spacer" />
+                    <div class="navigation-item-following-icon">
+                      <i class="fa-solid fa-arrow-right" />
+                    </div>
+                  </a>
+                ))
+              }
+
+              <a role="button" href="/About" class="navigation-item">
+                <span class="navigation-item-icon">
+                  <i class="fa-solid fa-circle-info"></i>
+                </span>
+                <div class="navigation-item-label">About</div>
+                <div class="spacer"></div>
+              </a>
+            </nav>
+          </div>
+
+          <div
+            class="theme-toggler dark:text-white"
+            transition:persist
+            role="button"
+          >
+            <div class="toggler">
+              <span class="icon" id="sun">
+                <i class="fa-solid fa-sun fa-2xl"></i>
+              </span>
+              <span class="icon" id="moon">
+                <i class="fa-solid fa-moon fa-2xl"></i>
+              </span>
+            </div>
+            <div class="toggler__label">
+              <span>Change the theme</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="navigation-drawer">
+        <aside class="drawer-wrapper" aria-expanded="false">
+          <nav class="drawer-navigation">
+            {
+              collectionObj.map((e, index) => (
+                <div data-drawer={e.name} class="drawer-navigation-items">
+                  <a
+                    role="button"
+                    href="#"
+                    class="drawer-navigation-item drawer-close dark:text-white"
+                  >
+                    <span class="drawer-navigation-item-icon">
+                      <i class="fa-solid fa-arrow-left" />
+                    </span>
+                    <span class="drawer-navigation-item-label ">Main menu</span>
+                    <span class="spacer" />
+                    <span class="drawer-navigation-item-following-icon"> </span>
+                  </a>
+
+                  <Fragment set:html={data[index]} transition:animate="fade" />
+                </div>
+              ))
+            }
+          </nav>
+        </aside>
+      </div>
+    </div>
+
+    <main class="page-content">
+      <slot />
+    </main>
+    <style is:global>
+      @import "https://unpkg.com/open-props";
+      :root {
+        --accent: 136, 58, 234;
+        --accent-light: 224, 204, 250;
+        --accent-dark: 49, 10, 101;
+        --accent-gradient: linear-gradient(
+          45deg,
+          rgb(var(--accent)),
+          rgb(var(--accent-light)) 30%,
+          white 60%
+        );
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-family: system-ui, sans-serif;
+        --navigation-rail-bg: var(--stone-1);
+        --drawer-wrapper: var(--stone-2);
+        --navigation-item-clr: var(--gray-7);
+        --navigation-item-hvr-clr: var(--stone-4);
+
+        --drawer-navigation-item-clr: var(--navigation-item-clr);
+        --drawer-navigation-item-hvr-clr: var(--indigo-2);
+        --navigation-item-label-hvr-clr: var(--stone-7);
+      }
+      html.dark {
+        --drawer-navigation-item-hvr-clr: var(--gray-6);
+        --navigation-rail-bg: rgb(107 114 128);
+        --drawer-wrapper: rgb(156 163 175);
+        --navigation-item-clr: white;
+        --navigation-item-hvr-clr: var(--stone-7);
+        --navigation-item-label-hvr-clr: white;
+      }
+
+      code {
+        font-family:
+          Menlo,
+          Monaco,
+          Lucida Console,
+          Liberation Mono,
+          DejaVu Sans Mono,
+          Bitstream Vera Sans Mono,
+          Courier New,
+          monospace;
+      }
+
+      .preview-wrapper {
+        @apply my-4;
+      }
+
+      .code-container {
+        position: relative;
+      }
+
+      .titlecontainer {
+        @apply border border-t-0 border-slate-500 rounded-tl-md rounded-tr-md text-xl;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-inline: 0.5em;
+        padding-block: 0.5em;
+      }
+      .titles {
+        display: flex;
+        gap: 0.5em;
+      }
+      .title {
+        @apply text-black dark:text-white p-2 cursor-pointer hover:bg-slate-500 rounded-md;
+      }
+
+      pre {
+        @apply rounded-bl-md rounded-br-md pl-8;
+      }
+
+      pre code {
+        @apply block leading-tight p-2 pl-1;
+        font-size: 17px;
+        counter-reset: step;
+        counter-increment: step 0;
+        margin-inline: 1em;
+      }
+
+      pre code .line {
+        @apply relative w-full inline-block cursor-pointer rounded-md transition-all me-2;
+      }
+
+      pre code .line::before {
+        @apply absolute overflow-hidden w-7  h-4 -left-9 top-0 text-right;
+        content: counter(step);
+        counter-increment: step;
+        color: rgba(115, 138, 148, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .line:hover {
+        @apply bg-emerald-100;
+      }
+      .copy-button {
+        @apply cursor-pointer;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        --navigation-rail-width: 88px;
+        --navigation-item-width: 80px;
+        --navigation-drawer-width: 230px;
+        --rounded-pill: 500px;
+      }
+
+      body {
+        overflow-x: hidden;
+        font-family: var(--font-sans);
+        display: flex;
+        flex: var(--navigation-rail-width) auto;
+      }
+
+      .navigation-rail-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: var(--navigation-rail-width);
+        background-color: var(--navigation-rail-bg);
+        color: var(--gray-5);
+        z-index: var(--layer-5);
+        transition: all 250ms var(--ease-4);
+      }
+
+      .wrapper.active .navigation-rail-wrapper {
+        left: 0;
+      }
+
+      .navigation-rail-wrapper a {
+        text-decoration: none;
+      }
+
+      .navigation-rail {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1em;
+        padding-bottom: 0.5em;
+        padding-inline: 1em;
+        height: inherit;
+        width: 100%;
+      }
+
+      .navigation-items {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .navigation-items .navigation-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-block: 0.5em;
+        width: var(--navigation-item-width);
+        color: var(--navigation-item-clr);
+        transition: 0.3s;
+      }
+
+      .navigation-item-following-icon {
+        display: none;
+      }
+
+      .navigation-item .navigation-item-icon {
+        padding-inline: 1em;
+        padding-block: 0.5em;
+        transition: 0.3s;
+        border-radius: var(--rounded-pill);
+      }
+
+      .navigation-item .navigation-item-label {
+        font-size: var(--font-size-0);
+      }
+
+      .navigation-item:focus .navigation-item-icon {
+        background-color: var(--indigo-3);
+        color: white;
+      }
+
+      .navigation-item:hover .navigation-item-icon {
+        background-color: var(--navigation-item-hvr-clr);
+      }
+
+      .navigation-item:hover .navigation-item-label {
+        color: var(--navigation-item-label-hvr-clr);
+        font-weight: bold;
+      }
+
+      .sidebar-items {
+        position: fixed;
+        height: 45px;
+        display: none;
+        top: 0;
+        left: 0;
+      }
+
+      .sidebar-toggler {
+        top: 0.5em;
+        left: 0.5em;
+        cursor: pointer;
+        display: none;
+        z-index: var(--layer-important);
+      }
+
+      .sidebar-toggler .sidebar-toggler-icon:last-child {
+        display: none;
+      }
+
+      .sidebar-toggler.active .sidebar-toggler-icon:last-child {
+        display: block;
+      }
+
+      .sidebar-toggler.active .sidebar-toggler-icon:first-child {
+        display: none;
+      }
+
+      /* --  toggler styles -- */
+      .theme-toggler {
+        --__dimensions: calc(var(--navigation-item-width) - 1.5em);
+
+        outline: 1px solid var(--navigation-item-clr);
+        border-radius: var(--radius-round);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .theme-toggler .toggler {
+        overflow: hidden;
+        position: relative;
+        height: var(--__dimensions);
+        width: var(--__dimensions);
+      }
+
+      .theme-toggler .toggler:hover {
+        opacity: 0.5;
+      }
+
+      .toggler .icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transform-origin: center;
+        transition: all 250ms var(--ease-4);
+      }
+
+      .toggler .icon:first-child {
+        top: -100px;
+      }
+
+      .toggler.active .icon:first-child {
+        top: 50%;
+      }
+
+      .toggler.active .icon:last-child {
+        top: 100px;
+      }
+
+      .toggler__label {
+        display: none;
+      }
+
+      /* --  navigation drawer styles -- */
+
+      .navigation-drawer {
+        margin-left: var(--navigation-rail-width);
+        position: relative;
+        flex-grow: 1;
+        display: flex;
+        /*   background-color: var(--blue-1); */
+        z-index: var(--layer-4);
+      }
+
+      .drawer-wrapper {
+        /* for making it take space */
+        /* position: absolute; */
+
+        position: fixed;
+        top: 0;
+        height: 100dvh;
+        width: var(--navigation-drawer-width);
+        border-top-right-radius: var(--radius-4);
+        border-bottom-right-radius: var(--radius-4);
+        background-color: var(--drawer-wrapper-bg);
+        transition: all 450ms var(--ease-4);
+      }
+
+      .drawer-wrapper[aria-expanded="false"] {
+        left: calc(
+          calc(var(--navigation-drawer-width) + var(--navigation-rail-width)) *
+            -1
+        );
+      }
+      .drawer-wrapper[aria-expanded="true"] {
+        left: var(--navigation-rail-width);
+        border-left: 1px solid var(--gray-7);
+      }
+
+      .drawer-navigation {
+        width: inherit;
+        height: inherit;
+        padding-block: 1em;
+        background-color: var(--navigation-rail-bg);
+      }
+
+      .drawer-navigation-items {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: inherit;
+        height: inherit;
+      }
+
+      .drawer-navigation-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: #000000;
+        border-radius: var(--rounded-pill);
+        width: calc(100% - 16px);
+        height: 44px;
+        padding-inline: 1.5em;
+        padding-block: 1em;
+        transition: 0.3s;
+      }
+
+      .drawer-close {
+        display: none;
+      }
+
+      .drawer-navigation-item-icon {
+        display: none;
+        margin-inline: 1em;
+      }
+
+      .drawer-navigation-dropdown-item {
+        display: flex;
+        flex-direction: column;
+        color: #000000;
+        width: calc(100% - 16px);
+        transition: 0.3s;
+      }
+
+      .drawer-navigation-dropdown-item .drawer-navigation-item-toggler {
+        border-radius: var(--rounded-pill);
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 44px;
+        padding-inline: 1.5em;
+        padding-block: 1em;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .drawer-navigation-dropdown-item .drawer-navigation-item-toggler:hover {
+        background-color: var(--stone-4);
+        color: white;
+      }
+
+      .dropdown-items {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1em;
+        overflow: hidden;
+        transition: max-height 250ms var(--ease-4);
+      }
+
+      .drawer-navigation-item-following-icon {
+        transition: transform 250ms var(--ease-4);
+      }
+
+      .drawer-navigation-dropdown-item[aria-expanded="false"] .dropdown-items {
+        max-height: 0;
+      }
+      .drawer-navigation-dropdown-item[aria-expanded="true"] .dropdown-items {
+        max-height: 500px;
+        transition: max-height 250ms var(--ease-4);
+      }
+
+      .drawer-navigation-dropdown-item[aria-expanded="true"]
+        .drawer-navigation-item-following-icon {
+        transform: rotate(-180deg);
+      }
+
+      .drawer-navigation-item:not(.dropdown-item):hover {
+        background-color: var(--drawer-navigation-item-hvr-clr);
+        color: var(--drawer-navigation-item-clr);
+      }
+
+      .spacer {
+        flex-grow: 1;
+      }
+
+      /* --  page content -- */
+
+      .page-content {
+        flex-grow: 1;
+      }
+
+      .wrapper {
+        background-color: var(--drawer-wrapper-bg);
+        width: var(--navigation-rail-width);
+        left: -88px;
+      }
+
+      /* media queries  */
+
+      @media screen and (width <= 960px) {
+        :root {
+          --navigation-item-width: calc(100% - 16px);
+        }
+
+        .sidebar-items {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          padding: 1em;
+          gap: 1.5em;
+          z-index: var(--layer-important);
+          width: 100%;
+        }
+
+        .navigation-rail-wrapper {
+          --navigation-rail-width: 300px;
+          width: var(--navigation-rail-width);
+          border-top-right-radius: var(--radius-4);
+          border-bottom-right-radius: var(--radius-4);
+          left: -300px;
+        }
+
+        .navigation-rail {
+          padding-top: 3em;
+          padding-inline: 16px;
+        }
+
+        .navigation {
+          width: 100%;
+        }
+
+        .navigation-items {
+          width: 100%;
+        }
+
+        .navigation-items .navigation-item {
+          flex-direction: row;
+          padding-inline: 1em;
+          padding-block: 0.5em;
+          margin-inline: auto;
+          width: 100%;
+          border-radius: var(--rounded-pill);
+          /* pointer-events: none;
+          cursor: default; */
+        }
+
+        .navigation-item-following-icon {
+          display: block;
+        }
+
+        .navigation-item:hover {
+          background-color: var(--stone-4);
+          color: white;
+        }
+
+        .navigation-item .navigation-item-label {
+          font-size: var(--font-size-1);
+        }
+
+        /* remove desktop navigation styles */
+
+        .navigation-item:focus .navigation-item-icon {
+          background-color: unset;
+          color: unset;
+        }
+
+        .navigation-item:hover .navigation-item-icon {
+          background-color: unset;
+          color: unset;
+        }
+
+        .navigation-item:hover .navigation-item-label {
+          color: unset;
+          font-weight: unset;
+        }
+
+        /* drawer styles */
+
+        .drawer-navigation {
+          padding-block: 4em;
+        }
+
+        .drawer-wrapper[aria-expanded="true"] {
+          left: 0;
+          border: 0;
+        }
+
+        .navigation-drawer {
+          margin-left: 0px;
+          padding-bottom: 1em;
+        }
+
+        .drawer-wrapper {
+          width: 300px;
+          background-color: var(--navigation-rail-bg);
+        }
+
+        .drawer-navigation-item {
+          padding-block: 0.5em;
+        }
+
+        .drawer-navigation-item-icon {
+          display: inline;
+        }
+
+        .drawer-close {
+          display: flex;
+        }
+
+        .theme-toggler {
+          width: calc(100% -16px);
+          margin-inline: auto;
+        }
+
+        .toggler {
+          width: 100%;
+        }
+        .theme-toggler {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          outline: 1px solid var(--navigation-item-clr);
+          border-radius: var(--rounded-pill);
+          padding-inline: 1em;
+        }
+
+        .theme-toggler .toggler {
+          outline: none;
+        }
+
+        .toggler__label {
+          display: inline;
+          color: black;
+        }
+
+        .wrapper {
+          width: 300px;
+          border-top-right-radius: var(--radius-4);
+          border-bottom-right-radius: var(--radius-4);
+          left: -300px;
+          position: fixed;
+          z-index: var(--layer-3);
+          height: 100%;
+        }
+
+        .wrapper.active {
+          left: 0;
+        }
+
+        .sidebar-toggler {
+          display: block;
+        }
+        .page-content {
+          margin-top: 46px;
+          position: relative;
+          z-index: var(--layer-2);
+        }
+      }
+    </style>
+
+    <script>
+      import $ from "jquery";
+
+      $(function () {
+        function resetSidebarLinks() {
+          if (window.innerWidth <= 960) {
+            var disableNavigationLinks =
+              document.querySelectorAll(".navigation-item");
+
+            disableNavigationLinks.forEach(function (link) {
+              link.addEventListener("click", function (event) {
+                // Your custom click event logic here
+                event.preventDefault(); // Prevent the default navigation behavior
+              });
+            });
+          }
+        }
+        resetSidebarLinks();
+        // Function to debounce a function
+        function debounce(func: Function, delay: number) {
+          let timer: number;
+          return function () {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+              //ts-ignore
+              func.apply(this, arguments);
+            }, delay);
+          };
+        }
+        // Debounce the window resize event
+        const debouncedResetSidebarLinks = debounce(resetSidebarLinks, 250); // Adjust the delay as needed
+
+        // Attach the debounced function to the window resize event
+        $(window).resize(debouncedResetSidebarLinks);
+
+        //theme toggler logic
+        $(".theme-toggler").click(function () {
+          $(".toggler").toggleClass("active");
+        });
+
+        //navigation-drawer dropdown item toggler logic
+
+        $(".drawer-navigation-item-toggler").click(function () {
+          var $dropdownItem = $(this).closest(
+            ".drawer-navigation-dropdown-item"
+          );
+          var isExpanded = $dropdownItem.attr("aria-expanded") === "true";
+          console.log("clicked");
+          // Toggle the aria-expanded attribute
+          $dropdownItem.attr("aria-expanded", String(!isExpanded));
+        });
+
+        //drawer toggler logic
+
+        var defaultItem = $(".drawer-navigation-items:first");
+        var defaultId = defaultItem.data("drawer");
+        console.warn(defaultId);
+        $(".drawer-navigation-items")
+          .not(`[data-drawer='${defaultId}']`)
+          .hide();
+
+        console.warn($(`[data-drawer='${defaultId}']`));
+
+        $(`[data-drawer='${defaultId}']`).fadeIn(300);
+
+        // Hide all other drawer items by default
+
+        //open if hover on item
+        $("[data-drawer-target]").mouseenter(function () {
+          var drawerItem = $(".drawer-wrapper");
+          // Toggle the aria-expanded attribute
+          // drawerItem.attr("aria-expanded", true);
+
+          let drawerToSetActive = $(this).data("drawer-target");
+
+          console.warn($(`[data-drawer='${drawerToSetActive}']`));
+          $(".drawer-navigation-items")
+            .not(`[data-drawer='${drawerToSetActive}']`)
+            .hide();
+          $(`[data-drawer='${drawerToSetActive}']`).fadeIn(300);
+
+          var drawerItem = $(".drawer-wrapper");
+          // Toggle the aria-expanded attribute
+          drawerItem.attr("aria-expanded", "true");
+        });
+
+        $("[data-drawer-target]").click(function () {
+          var drawerItem = $(".drawer-wrapper");
+          let drawerToSetActive = $(this).data("drawer-target");
+
+          // Check if the drawer is already visible
+          if (drawerItem.hasClass("open")) {
+            $(".drawer-navigation-items")
+              .not(`[data-drawer='${drawerToSetActive}']`)
+              .hide();
+            $(`[data-drawer='${drawerToSetActive}']`).fadeIn(300);
+          } else {
+            // Slide in the drawer from the left
+            drawerItem.css({ left: "-100%" }).animate(
+              {
+                left: 0,
+              },
+              250
+            );
+
+            // Hide the navigation rail
+            $(".navigation-rail-wrapper").animate(
+              {
+                left: "-100px",
+                opacity: 0,
+              },
+              250
+            );
+
+            $(".drawer-wrapper").addClass("open");
+          }
+
+          $(".drawer-wrapper").css("z-index", 10);
+          $(".navigation-rail-wrapper").css("z-index", -1);
+        });
+
+        $(".drawer-close").click(function () {
+          // Slide out the drawer to the left
+          $(".drawer-wrapper").animate(
+            {
+              left: "-100%",
+            },
+            250,
+            function () {
+              // Reset drawer visibility and content
+              $(".drawer-wrapper").removeClass("open");
+              $(".drawer-navigation-items").hide();
+            }
+          );
+
+          // Show the navigation rail
+          $(".navigation-rail-wrapper").animate(
+            {
+              opacity: 1,
+              left: "0px",
+            },
+            250
+          );
+
+          $(".drawer-wrapper").css("z-index", -1);
+          $(".navigation-rail-wrapper").css("z-index", 10);
+        });
+        $(".drawer-wrapper").mouseenter(function () {
+          console.log("entered");
+          // Toggle the aria-expanded attribute
+          $(".drawer-wrapper").attr("aria-expanded", "true");
+        });
+
+        // Close if hover anywhere else
+        $(".drawer-wrapper,[data-drawer-target]").mouseleave(function () {
+          var drawerItem = $(".drawer-wrapper");
+          // Set the aria-expanded attribute to false when the mouse leaves the target or wrapper
+          // console.log("done");
+          drawerItem.attr("aria-expanded", "false");
+        });
+
+        $(".sidebar-toggler").click(function () {
+          $(this).toggleClass("active");
+          $(".wrapper").toggleClass("active");
+          $(".navigation-rail-wrapper").removeAttr("style");
+
+          // Remove the style attribute from elements with the class 'drawer-wrapper'
+          $(".drawer-wrapper").removeAttr("style");
+        });
+
+        let sun = $("#sun");
+        let moon = $("#moon");
+        const html = $("html");
+        // toggler script
+        function setTheme() {
+          // Check local storage for the theme
+          const currentTheme = localStorage.getItem("theme");
+          console.log(currentTheme);
+
+          if (currentTheme) {
+            html.addClass(currentTheme);
+            if (currentTheme === "dark") {
+              moon.removeClass("-translate-y-10");
+              sun.addClass("translate-y-10");
+              html.addClass("dark");
+            } else {
+              sun.removeClass("translate-y-10");
+              moon.addClass("-translate-y-10");
+              html.removeClass("dark");
+            }
+          }
+        }
+
+        document.addEventListener("astro:after-swap", setTheme);
+
+        $(".toggler").click(function (e) {
+          if (moon.hasClass("-translate-y-10")) {
+            moon.removeClass("-translate-y-10");
+            sun.addClass("translate-y-10");
+            localStorage.setItem("theme", "dark");
+            html.addClass("dark");
+          } else {
+            sun.removeClass("translate-y-10");
+            moon.addClass("-translate-y-10");
+            localStorage.setItem("theme", "light");
+            html.removeClass("dark");
+          }
+        });
+      });
+    </script>
   </body>
 </html>
-<style is:global>
-  :root {
-    --accent: 136, 58, 234;
-    --accent-light: 224, 204, 250;
-    --accent-dark: 49, 10, 101;
-    --accent-gradient: linear-gradient(
-      45deg,
-      rgb(var(--accent)),
-      rgb(var(--accent-light)) 30%,
-      white 60%
-    );
-  }
-  html {
-    scroll-behavior: smooth;
-    font-family: system-ui, sans-serif;
-  }
-  code {
-    font-family:
-      Menlo,
-      Monaco,
-      Lucida Console,
-      Liberation Mono,
-      DejaVu Sans Mono,
-      Bitstream Vera Sans Mono,
-      Courier New,
-      monospace;
-  }
-</style>

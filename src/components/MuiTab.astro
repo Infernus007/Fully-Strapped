@@ -74,8 +74,8 @@
 
 <style>
   .tabs {
-    max-width: 800px;
-    background-color: #334155;
+    @apply bg-slate-600 text-white border border-black;
+    width: 800px;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: 75px;
@@ -90,9 +90,10 @@
     align-items: center;
     border-radius: 500px;
     cursor: pointer;
+    @apply transition-all;
   }
 
   .tab-item:hover {
-    background: #94a3b8;
+    @apply bg-slate-300;
   }
 </style>
