@@ -39,120 +39,161 @@ const { Content, headings } = await asset.render();
   import $ from "jquery";
 
   $(function () {
-    $(".preview").each(function () {
-      // Create a container div for all pre elements
-      let containerDiv = $(
-        "<div class='code-container' style='overflow-y: scroll;height:550px'></div>"
-      );
-
-      // Create title container div
-      let titleContainer = $("<div class='titlecontainer'></div>");
-
-      let codeBlocks = $(this).children("pre");
-      let titleDiv = $("<div class='titles'></div>");
-      titleContainer.append(titleDiv);
-      let copyButton = $(
-        "<span class='copy-button'><i class='fa-regular fa-clipboard dark:text-white '></i></span>"
-      );
-      titleContainer.append(copyButton);
-
-      codeBlocks.each(function (index, ele) {
-        // Set styles for each pre element
-        $(ele).css({
-          position: "absolute",
-          top: 0, // Adjust the distance between <pre> elements
-          left: 0,
-          width: 100 + "%",
-          display: index === 0 ? "block" : "none", // Show the first pre, hide the rest
-        });
-
-        // Determine file name based on index
-        let fileName = "";
-        if (index === 0) {
-          fileName = "index.html";
-        } else if (index === 1) {
-          fileName = "css";
-        } else if (index === 2) {
-          fileName = "js";
-        } else {
-          fileName = "file" + (index + 1);
-        }
-
-        // Create title div
-        let titles = $(
-          "<span class='title' data-index='" +
-            index +
-            "'>" +
-            fileName +
-            "</span>"
+    function setThings() {
+      $(".preview").each(function () {
+        // Create a container div for all pre elements
+        let containerDiv = $(
+          "<div class='code-container' style='overflow-y: scroll;height:550px'></div>"
         );
 
-        titleDiv.append(titles);
-        containerDiv.append($(this));
+        // Create title container div
+        let titleContainer = $("<div class='titlecontainer'></div>");
+
+        let codeBlocks = $(this).children("pre");
+        let titleDiv = $("<div class='titles'></div>");
+        titleContainer.append(titleDiv);
+        let copyButton = $(
+          "<span class='copy-button'><i class='fa-regular fa-clipboard dark:text-white '></i></span>"
+        );
+        titleContainer.append(copyButton);
+
+        codeBlocks.each(function (index, ele) {
+          // Set styles for each pre element
+          $(ele).css({
+            position: "absolute",
+            top: 0, // Adjust the distance between <pre> elements
+            left: 0,
+            width: 100 + "%",
+            display: index === 0 ? "block" : "none", // Show the first pre, hide the rest
+          });
+
+          // Determine file name based on index
+          let fileName = "";
+          if (index === 0) {
+            fileName = "index.html";
+          } else if (index === 1) {
+            fileName = "css";
+          } else if (index === 2) {
+            fileName = "js";
+          } else {
+            fileName = "file" + (index + 1);
+          }
+
+          // Create title div
+          let titles = $(
+            "<span class='title' data-index='" +
+              index +
+              "'>" +
+              fileName +
+              "</span>"
+          );
+
+          titleDiv.append(titles);
+          containerDiv.append($(this));
+        });
+
+        // Append the title container and container div to the parent container
+        $(this).append(titleContainer);
+        $(this).append(containerDiv);
+
+        titleContainer.find(".title").on("click", function () {
+          let index = $(this).data("index");
+
+          // Hide all pre elements within the specific .preview container
+          $(this)
+            .parent()
+            .parent()
+            .siblings(".code-container")
+            .find("pre")
+            .hide();
+
+          // Show the pre element corresponding to the clicked title
+          $(this)
+            .parent()
+            .parent()
+            .siblings(".code-container")
+            .find("pre")
+            .eq(index)
+            .show();
+
+          // Remove active class from all titles within the specific .preview container
+          $(this).siblings(".title").removeClass("bg-cyan-200");
+
+          // Add active class to the clicked title
+          $(this).addClass("bg-cyan-200");
+        });
       });
 
-      // Append the title container and container div to the parent container
-      $(this).append(titleContainer);
-      $(this).append(containerDiv);
-
-      titleContainer.find(".title").on("click", function () {
-        let index = $(this).data("index");
-
-        // Hide all pre elements within the specific .preview container
-        $(this)
-          .parent()
+      // Add click event to copy button
+      $(".copy-button").on("click", function () {
+        let copyText = $(this)
           .parent()
           .siblings(".code-container")
-          .find("pre")
-          .hide();
+          .find("pre:visible") // Select only visible pre elements
+          .text();
 
-        // Show the pre element corresponding to the clicked title
+        navigator.clipboard.writeText(copyText).then(function () {
+          // console.log("Text copied to clipboard");
+        });
+
+        let copyButton = $(this);
+
+        // Change icon class temporarily
         $(this)
-          .parent()
-          .parent()
-          .siblings(".code-container")
-          .find("pre")
-          .eq(index)
-          .show();
-
-        // Remove active class from all titles within the specific .preview container
-        $(this).siblings(".title").removeClass("bg-cyan-200");
-
-        // Add active class to the clicked title
-        $(this).addClass("bg-cyan-200");
-      });
-    });
-
-    // Add click event to copy button
-    $(".copy-button").on("click", function () {
-      let copyText = $(this)
-        .parent()
-        .siblings(".code-container")
-        .find("pre:visible") // Select only visible pre elements
-        .text();
-
-      navigator.clipboard.writeText(copyText).then(function () {
-        // console.log("Text copied to clipboard");
-      });
-
-      let copyButton = $(this);
-
-      // Change icon class temporarily
-      $(this)
-        .find("i")
-        .removeClass("fa-regular fa-clipboard")
-        .addClass("fa-solid fa-clipboard");
-
-      // Reset the class after a few seconds (adjust the timeout duration as needed)
-      setTimeout(function () {
-        copyButton
           .find("i")
-          .removeClass("fa-solid fa-clipboard")
-          .addClass("fa-regular fa-clipboard");
-      }, 3000); // 3000 milliseconds (3 seconds) in this example
+          .removeClass("fa-regular fa-clipboard")
+          .addClass("fa-solid fa-clipboard");
 
-      // Code to copy text to clipboard (you can implement or use a library for this)
-      // console.log("Copying: ", copyText);
-    });
+        // Reset the class after a few seconds (adjust the timeout duration as needed)
+        setTimeout(function () {
+          copyButton
+            .find("i")
+            .removeClass("fa-solid fa-clipboard")
+            .addClass("fa-regular fa-clipboard");
+        }, 3000); // 3000 milliseconds (3 seconds) in this example
+
+        var observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              const headingFragment = `#${entry.target.id}`;
+              const tocItem = document.querySelector(
+                `a[href="${headingFragment}"]`
+              );
+
+              if (entry.isIntersecting) {
+                const previouslyActivatedItem =
+                  document.querySelector(".active-toc-item");
+
+                previouslyActivatedItem?.classList.remove("active-toc-item");
+                tocItem?.classList.add("active-toc-item");
+                console.log("intersection happening");
+              } else {
+                const isAnyOtherEntryIntersecting = entries.some(
+                  (e) => e.target.id !== entry.target.id && e.isIntersecting
+                );
+
+                if (isAnyOtherEntryIntersecting) {
+                  tocItem?.classList.remove("active-toc-item");
+                }
+              }
+            }
+          },
+          { root: null, rootMargin: "0px", threshold: [1] }
+        );
+
+        const sectionHeadings = document.querySelectorAll("h2");
+
+        console.log(sectionHeadings);
+        for (const heading of sectionHeadings) {
+          observer.observe(heading);
+        }
+        // Code to copy text to clipboard (you can implement or use a library for this)
+        // console.log("Copying: ", copyText);
+      });
+    }
+
+    document.addEventListener("astro:after-swap", setThings);
+
+    setThings();
   });
 </script>
