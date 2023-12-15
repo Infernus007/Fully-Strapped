@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import img from "../assets/btnicon.svg";
 ---
 
 <a
@@ -9,7 +10,7 @@ import { Image } from "astro:assets";
   class="button-flex w-inline-block"
 >
   <Image
-    src="/src/assets/btnicon.svg"
+    src={img}
     width="40"
     height="40"
     alt="button icon"
@@ -24,16 +25,15 @@ import { Image } from "astro:assets";
         </div>
       </div>
     </div>
-  </div><img
-    src="/src/assets/btnicon.svg"
-    loading="eager"
+  </div>
+  <Image
+    src={img}
     width="40"
     height="40"
     alt="button icon"
-    data-hover-elem=""
-    class="icon-scale is-2"
-  /></a
->
+    class="icon-scale is-1"
+  />
+</a>
 
 <style>
   .button-flex {
