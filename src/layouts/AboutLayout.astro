@@ -3,7 +3,7 @@
     id="text-section"
     class="md:overflow-scroll md:h-[100vh] dark:text-white"
   >
-    <div id="section1" class=" md:h-[100vh] section">
+    <div id="section1" class="md:h-[100vh] section">
       <strong class="text-3xl">Why</strong>
       <p class="mt-10 text-xl">
         The reason for creating this website was to create a portal of different
@@ -115,7 +115,7 @@
     });
   };
 
-  const observer2 = new IntersectionObserver(callback, options);
+  let observer2 = new IntersectionObserver(callback, options);
 
   sections.forEach((section) => {
     observer2.observe(section);

@@ -49,7 +49,7 @@ const grouppedHeadings = headings.reduce((array, heading) => {
 </nav>
 
 <script is:inline>
-  const observer = new IntersectionObserver(
+  let observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         const headingFragment = `#${entry.target.id}`;
