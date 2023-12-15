@@ -1,6 +1,6 @@
 ---
 import SearchInput from "./SearchInput.astro";
-
+import { Image } from "astro:assets";
 interface Props {
   title: string;
   subtitle?: string;
@@ -12,8 +12,14 @@ const {
   title,
   subtitle,
   transitionName,
-  image = "background.avif",
+  image = "/src/assets/background.avif",
 } = Astro.props;
+
+const images = import.meta.glob("/src/assets/*.{jpeg,jpg,png,gif,avif}");
+
+console.log(images);
+
+console.log(image);
 ---
 
 <div class="z-1 relative text-white">
@@ -21,10 +27,12 @@ const {
     <div
       class="p-3 md:p-6 relative lg:p-12 text-center rounded-3xl overflow-hidden h-[25vh] lg:h-[calc(80vh-24px)]"
     >
-      <img
+      <Image
         transition:name={transitionName}
-        src={`/${image}`}
+        src={images[image]()}
         alt={title}
+        height="1280"
+        width="1280"
         class="object-cover w-full h-full rounded-3xl absolute inset-0"
       />
 

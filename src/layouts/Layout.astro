@@ -75,7 +75,7 @@ const { title } = Astro.props;
   </head>
   <body class="dark:bg-gray-600" transition:animate="fade">
     <div class="sidebar-items dark:bg-gray-500">
-      <div class="sidebar-toggler" transition:persist>
+      <div class="sidebar-toggler">
         <span class="sidebar-toggler-icon">
           <i class="fa-solid fa-bars"></i>
         </span>
@@ -200,7 +200,7 @@ const { title } = Astro.props;
 
       /* For WebKit (Chrome, Safari) */
       ::-webkit-scrollbar {
-        width: 12px;
+        width: 5px;
       }
 
       ::-webkit-scrollbar-thumb {
@@ -969,18 +969,18 @@ const { title } = Astro.props;
             // console.log("done");
             drawerItem.attr("aria-expanded", "false");
           });
+
+          $(".sidebar-toggler").click(function () {
+            $(this).toggleClass("active");
+            $(".wrapper").toggleClass("active");
+            $(".navigation-rail-wrapper").removeAttr("style");
+
+            // Remove the style attribute from elements with the class 'drawer-wrapper'
+            $(".drawer-wrapper").removeAttr("style");
+          });
         }
 
         initInteractions();
-
-        $(".sidebar-toggler").click(function () {
-          $(this).toggleClass("active");
-          $(".wrapper").toggleClass("active");
-          $(".navigation-rail-wrapper").removeAttr("style");
-
-          // Remove the style attribute from elements with the class 'drawer-wrapper'
-          $(".drawer-wrapper").removeAttr("style");
-        });
 
         let sun = $("#sun");
         let moon = $("#moon");

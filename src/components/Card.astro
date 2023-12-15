@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+
 interface Props {
   title: string;
   description: string;
@@ -9,9 +11,11 @@ interface Props {
 const {
   title = "title",
   description = "description",
-  img = "theme.jpg",
+  img = "/src/assets/theme.jpg",
   url = "#",
 } = Astro.props;
+
+const images = import.meta.glob("/src/assets/*.{jpeg,jpg,png,gif,svg}");
 ---
 
 <div class="card-wrapper lg:col-span-2">
@@ -22,7 +26,13 @@ const {
     <div
       class="rounded-2xl group-hover:rounded-2xl overflow-hidden w-full h-[200px] min-w-[200px]"
     >
-      <img src={`/${img}`}  alt={title} class="object-cover w-full h-full" />
+      <Image
+        src={images[img]()}
+        height="160"
+        width="160"
+        alt={title}
+        class="object-cover w-full h-full"
+      />
     </div>
 
     <div class="grid relative m-6 gap-2 self-start">

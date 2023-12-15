@@ -11,14 +11,14 @@ const allAssets = await getCollection("assets");
   <MainContainer
     subtitle="Discover various assets"
     title="Assets"
-    image="theme.jpg"
+    image="/src/assets/theme.jpg"
   />
   <CardLayout>
     {
       allAssets.map((asset) => (
         <Card
           url={"/Assets/" + asset.slug}
-          img={asset.data.img}
+          img={ asset.data.img}
           description={asset.data.description}
           title={asset.data.title}
         />

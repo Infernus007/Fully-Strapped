@@ -17,6 +17,9 @@ dependencies:
   astro:
     specifier: ^3.4.0
     version: 3.4.0(typescript@5.2.2)
+  astro-compressor:
+    specifier: ^0.4.1
+    version: 0.4.1
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -1207,6 +1210,10 @@ packages:
   /astring@1.8.6:
     resolution: {integrity: sha512-ISvCdHdlTDlH5IpxQJIex7BWBywFWgjJSVdwst+/iQCoEYnyOaQ95+X1JGshuBjGp6nxKUy1jMgE3zPqN7fQdg==}
     hasBin: true
+    dev: false
+
+  /astro-compressor@0.4.1:
+    resolution: {integrity: sha512-IAgYAlxYRMolaptsFB9quH7RxX4eUeC4UfULCPhT+ILcg7m1kbaxuyUKqGg9Hh+KZ+FNPPDAz7DqUfl+HDWhQg==}
     dev: false
 
   /astro@3.4.0(typescript@5.2.2):

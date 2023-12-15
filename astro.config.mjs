@@ -2,7 +2,8 @@ import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
 import addClasses from "rehype-add-classes";
-// https://astro.build/config
+import compressor from "astro-compressor";
+
 const config = defineConfig({
   markdown: {
     rehypePlugins: [
@@ -27,12 +28,19 @@ const config = defineConfig({
     tailwind(),
     mdx({
       syntaxHighlight: "shiki",
-      shikiConfig: { theme: "material-theme-lighter" },
-      remarkRehype: { footnoteLabel: "Footnotes" },
+      shikiConfig: {
+        theme: "material-theme-lighter",
+      },
+      remarkRehype: {
+        footnoteLabel: "Footnotes",
+      },
       gfm: false,
       optimize: true,
     }),
+
+    compressor({ gzip: true, brotli: false }),
   ],
 });
 
-export default config;
+// https://astro.build/config
+export default defineConfig(config);
