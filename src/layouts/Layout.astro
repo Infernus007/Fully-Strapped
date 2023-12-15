@@ -3,6 +3,8 @@ import Sidebar from "../components/Sidebar.astro";
 import { collectionObj } from "../content/config";
 import { getCollection, getEntry } from "astro:content";
 import { ViewTransitions } from "astro:transitions";
+import Modal from "../components/Modal.astro";
+import SearchInput from "../components/SearchInput.astro";
 interface Props {
   title: string;
 }
@@ -123,6 +125,18 @@ const { title } = Astro.props;
                 ))
               }
 
+              <div
+                data-id="search-dialog"
+                role="button"
+                class="navigation-item modal-btn"
+              >
+                <span class="navigation-item-icon">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <div class="navigation-item-label">Search</div>
+                <div class="spacer"></div>
+              </div>
+
               <a role="button" href="/About" class="navigation-item">
                 <span class="navigation-item-icon">
                   <i class="fa-solid fa-circle-info"></i>
@@ -183,6 +197,25 @@ const { title } = Astro.props;
 
     <main class="page-content">
       <slot />
+
+      <Modal id="search-dialog" open="Open modal">
+        <SearchInput slot="main" />
+
+        <button slot="close"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="currentColor"
+            class="bi bi-x"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+            ></path>
+          </svg></button
+        >
+      </Modal>
     </main>
     <style is:global>
       @import "https://unpkg.com/open-props";
@@ -930,6 +963,11 @@ const { title } = Astro.props;
             $(".navigation-rail-wrapper").css("z-index", -1);
           });
 
+          $("[data-id='search-dialog']").click(function () {
+            $(".wrapper").removeClass("active");
+            console.log("clicked");
+          });
+
           $(".drawer-close").click(function () {
             // Slide out the drawer to the left
             $(".drawer-wrapper").animate(
@@ -977,6 +1015,22 @@ const { title } = Astro.props;
 
             // Remove the style attribute from elements with the class 'drawer-wrapper'
             $(".drawer-wrapper").removeAttr("style");
+          });
+
+          //modal
+
+          $(".modal-btn").click(function () {
+            let data = $(this).data("id");
+
+            //@ts-ignore
+            console.log($(`#${data}`));
+
+            $(`#${data}`).attr("open", "true");
+            $(document).on("keydown", function (e) {
+              if (e.key === "Escape") {
+                $(`#${data}`).removeAttr("open");
+              }
+            });
           });
         }
 

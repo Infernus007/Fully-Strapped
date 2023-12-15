@@ -21,7 +21,7 @@ import grayMatter from "gray-matter";
   const contentFilePaths = await globby([
     "C:/Users/Jash/OneDrive/Desktop/Fully-Straped/src/content/assets/button.mdx",
     "C:/Users/Jash/OneDrive/Desktop/Fully-Straped/src/content/assets/tabs.mdx",
-    "C:/Users/Jash/OneDrive/Desktop/Fully-Straped/src/content/assets/orbit.mdx",
+    "C:/Users/Jash/OneDrive/Desktop/Fully-Straped/src/content/assets/links.mdx",
     "C:/Users/Jash/OneDrive/Desktop/Fully-Straped/src/content/assets/menu.mdx",
     "C:/Users/Jash/OneDrive/Desktop/Fully-Straped/src/content/assets/input.mdx",
     "C:/Users/Jash/OneDrive/Desktop/Fully-Straped/src/content/assets/forms.mdx",

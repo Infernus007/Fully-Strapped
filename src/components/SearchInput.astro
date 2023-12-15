@@ -13,228 +13,241 @@
   crossorigin="anonymous"
   referrerpolicy="no-referrer"></script>
 
-<section class="max-w-3xl mx-auto px-3">
+<section class="max-w-3xl mb-5 mt-14 relative search-input w-[85%] mx-auto">
   <div class="searchBoxContainer">
-    <input
-      type="text"
-      id="searchBox"
-      class="searchBox w-full px-2 py-1"
-      placeholder="Search..."
-      data-test="search-input"
-    />
+    <div class="relative rounded-md shadow-sm">
+      <input
+        type="text"
+        id="searchBox"
+        class="searchBox w-full px-4 py-2 border dark:bg-slate-800 dark:text-white bg-white text-black dark:border-white border-black rounded-md dark:focus:border-purple-600 transition duration-150 ease-in-out"
+        placeholder="Search..."
+        data-test="search-input"
+      />
+      <div
+        class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+      >
+        <i class="fas fa-search text-gray-400"></i>
+      </div>
+    </div>
   </div>
 
   <!-- Search Results -->
-  <div id="searchResults" class="searchResults"></div>
-
-  <style>
-    #searchBox {
-      border: 2px solid black;
-      border-radius: 5px;
-    }
-
-    .searchResultPage {
-      padding: 15px 0;
-    }
-
-    .searchResultTitle {
-      color: #fd2d78 !important;
-    }
-
-    ::-moz-selection {
-      color: white;
-      background: #fd2d78;
-    }
-
-    ::selection {
-      color: white;
-      background: #fd2d78;
-    }
-  </style>
-
-  <!-- Search JS -->
-  <script>
-    // @ts-nocheck
-
-    //@ts-ignore
-    let lunrIndex;
-    //@ts-ignore
-
-    let lunrResult;
-    //@ts-ignore
-
-    let pagesIndex;
-
-    const bigramTokeniser = (obj, metadata) => {
-      if (obj == null || obj == undefined) {
-        return [];
-      }
-
-      let str = obj.toString().trim().toLowerCase();
-      let tokens = [];
-
-      for (let i = 0; i <= str.length - 2; i++) {
-        let tokenMetadata = lunr.utils.clone(metadata) || {};
-        tokenMetadata["position"] = [i, i + 2];
-        tokenMetadata["index"] = tokens.length;
-        tokens.push(new lunr.Token(str.slice(i, i + 2), tokenMetadata));
-      }
-
-      return tokens;
-    };
-
-    const queryNgramSeparator = (query) => {
-      const str = query.toString().trim().toLowerCase();
-      const tokens = [];
-
-      for (let i = 0; i <= str.length - 2; i++) {
-        tokens.push(str.slice(i, i + 2));
-      }
-
-      return tokens.join(" ");
-    };
-
-    const index = "/search-index.json";
-
-    const initLunr = () => {
-      let request = new XMLHttpRequest();
-      request.open("GET", index, true);
-      request.onload = function () {
-        if (this.status >= 200 && this.status < 400) {
-          pagesIndex = JSON.parse(this.response);
-          lunrIndex = lunr(function () {
-            this.tokenizer = bigramTokeniser;
-            this.pipeline.reset();
-            this.ref("slug");
-            this.field("title", { boost: 10 });
-            this.field("body");
-            this.metadataWhitelist = ["position"];
-            pagesIndex.forEach((page) => {
-              this.add(page);
-            }, this);
-          });
-        } else {
-          console.error("Error getting Hugo index flie");
-        }
-      };
-      request.onerror = function () {
-        console.error("connection error");
-      };
-      request.send();
-    };
-
-    /**
-     * Searching pages using lunr
-     * @param {String} query Query string for searching
-     * @return {Object[]} Array of search results
-     */
-    const search = (query) => {
-      lunrResult = lunrIndex.search(queryNgramSeparator(query));
-      return lunrResult.map((result) => {
-        return pagesIndex.filter((page) => {
-          return page.slug === result.ref;
-        })[0];
-      });
-    };
-
-    const initUI = () => {
-      const searchBox = document.querySelector("#searchBox");
-      if (searchBox === null) {
-        return;
-      }
-      searchBox.addEventListener("keyup", function (event) {
-        let searchResultsArea = document.querySelector("#searchResults");
-        let query = event.currentTarget.value;
-
-        // Only trigger a search when 2 chars. at least have been provided
-        if (query.length < 2) {
-          searchResultsArea.style.display = "none";
-          return;
-        }
-
-        // Display search results
-        renderResults(search(query));
-        searchResultsArea.style.display = "block";
-      });
-    };
-
-    /**
-     * Rendering search results
-     * @param {Object[]} results Array of search results
-     */
-    const renderResults = (results) => {
-      const searchResults = document.querySelector("#searchResults");
-      const query = document.querySelector("#searchBox").value;
-      const BODY_LENGTH = 100;
-      const MAX_PAGES = 10;
-
-      // Clear search result
-      while (searchResults.firstChild)
-        searchResults.removeChild(searchResults.firstChild);
-
-      // Show message when results is empty
-      if (!results.length) {
-        let resultPage = document.createElement("div");
-        resultPage.className = "searchResultPage";
-        resultPage.innerHTML = 'No results found for query "' + query + '"';
-        searchResults.append(resultPage);
-        return;
-      }
-
-      let instance = new Mark(document.querySelector("#searchResults"));
-      // Only show the ten first results
-      results.slice(0, MAX_PAGES).forEach((result, idx) => {
-        let resultPage = document.createElement("a");
-        resultPage.href = `/Components/${result.slug}`;
-        let list2 = [
-          "dark:text-white",
-          "text-white",
-          "border",
-          "dark:border-white",
-          "border-black",
-          "flex",
-          "flex-col",
-          "gap-2",
-          "p-3",
-          "w-full",
-          "rounded",
-        ];
-        resultPage.className = "searchResultPage";
-        resultPage.classList.add(...list2);
-        let metadata = lunrResult[idx].matchData.metadata;
-        let matchPosition =
-          metadata[Object.keys(metadata)[0]].body.position[0][0];
-        let bodyStartPosition =
-          matchPosition - BODY_LENGTH / 2 > 0
-            ? matchPosition - BODY_LENGTH / 2
-            : 0;
-
-        let resultTitle = document.createElement("a");
-        resultTitle.className = "searchResultTitle";
-        let list = ["dark:text-white", "text-white"];
-        resultTitle.classList.add(...list);
-        resultTitle.innerHTML = result.title;
-        resultPage.append(resultTitle);
-
-        let resultBody = document.createElement("div");
-        resultBody.className = "searchResultBody";
-        resultBody.innerHTML = result.body.substr(
-          bodyStartPosition,
-          BODY_LENGTH
-        );
-        resultPage.append(resultBody);
-        searchResults.append(resultPage);
-
-        instance.mark(query);
-      });
-    };
-
-    initLunr();
-    initUI();
-  </script>
-
-  <script>
-    //@ts-ignore
-    document.getElementById("searchBox").focus();
-  </script>
+  <div id="searchResults" class="searchResults my-4"></div>
 </section>
+<style>
+  #searchResults {
+    position: absolute;
+    left: 0;
+    height: 25em;
+    overflow-y: scroll;
+  }
+
+  .searchResultPage {
+    padding: 15px 0;
+  }
+
+  .searchResultTitle {
+    color: #fd2d78 !important;
+  }
+
+  ::-moz-selection {
+    color: white;
+    background: #fd2d78;
+  }
+
+  ::selection {
+    color: white;
+    background: #fd2d78;
+  }
+</style>
+
+<!-- Search JS -->
+<script>
+  // @ts-nocheck
+
+  //@ts-ignore
+  let lunrIndex;
+  //@ts-ignore
+
+  let lunrResult;
+  //@ts-ignore
+
+  let pagesIndex;
+
+  const bigramTokeniser = (obj, metadata) => {
+    if (obj == null || obj == undefined) {
+      return [];
+    }
+
+    let str = obj.toString().trim().toLowerCase();
+    let tokens = [];
+
+    for (let i = 0; i <= str.length - 2; i++) {
+      let tokenMetadata = lunr.utils.clone(metadata) || {};
+      tokenMetadata["position"] = [i, i + 2];
+      tokenMetadata["index"] = tokens.length;
+      tokens.push(new lunr.Token(str.slice(i, i + 2), tokenMetadata));
+    }
+
+    return tokens;
+  };
+
+  const queryNgramSeparator = (query) => {
+    const str = query.toString().trim().toLowerCase();
+    const tokens = [];
+
+    for (let i = 0; i <= str.length - 2; i++) {
+      tokens.push(str.slice(i, i + 2));
+    }
+
+    return tokens.join(" ");
+  };
+
+  const index = "/search-index.json";
+
+  const initLunr = () => {
+    let request = new XMLHttpRequest();
+    request.open("GET", index, true);
+    request.onload = function () {
+      if (this.status >= 200 && this.status < 400) {
+        pagesIndex = JSON.parse(this.response);
+        lunrIndex = lunr(function () {
+          this.tokenizer = bigramTokeniser;
+          this.pipeline.reset();
+          this.ref("slug");
+          this.field("title", { boost: 10 });
+          this.field("body");
+          this.metadataWhitelist = ["position"];
+          pagesIndex.forEach((page) => {
+            this.add(page);
+          }, this);
+        });
+      } else {
+        console.error("Error getting Hugo index flie");
+      }
+    };
+    request.onerror = function () {
+      console.error("connection error");
+    };
+    request.send();
+  };
+
+  /**
+   * Searching pages using lunr
+   * @param {String} query Query string for searching
+   * @return {Object[]} Array of search results
+   */
+  const search = (query) => {
+    lunrResult = lunrIndex.search(queryNgramSeparator(query));
+    return lunrResult.map((result) => {
+      return pagesIndex.filter((page) => {
+        return page.slug === result.ref;
+      })[0];
+    });
+  };
+
+  const initUI = () => {
+    const searchBox = document.querySelector("#searchBox");
+    if (searchBox === null) {
+      return;
+    }
+    searchBox.addEventListener("keyup", function (event) {
+      let searchResultsArea = document.querySelector("#searchResults");
+      let query = event.currentTarget.value;
+
+      // Only trigger a search when 2 chars. at least have been provided
+      if (query.length < 2) {
+        searchResultsArea.style.display = "none";
+        return;
+      }
+
+      // Display search results
+      renderResults(search(query));
+      let heading = document.createElement("div");
+      heading.innerHTML =
+        "<span class='dark:text-white text-black text-xl'>Results</span>";
+      searchResultsArea?.prepend(heading);
+      searchResultsArea.style.display = "block";
+    });
+  };
+
+  /**
+   * Rendering search results
+   * @param {Object[]} results Array of search results
+   */
+  const renderResults = (results) => {
+    const searchResults = document.querySelector("#searchResults");
+    const query = document.querySelector("#searchBox").value;
+    const BODY_LENGTH = 100;
+    const MAX_PAGES = 10;
+
+    // Clear search result
+    while (searchResults.firstChild)
+      searchResults.removeChild(searchResults.firstChild);
+
+    // Show message when results is empty
+    if (!results.length) {
+      let resultPage = document.createElement("div");
+      resultPage.className = "searchResultPage";
+      resultPage.innerHTML = 'No results found for query "' + query + '"';
+      searchResults.append(resultPage);
+      return;
+    }
+
+    let instance = new Mark(document.querySelector("#searchResults"));
+    // Only show the ten first results
+    results.slice(0, MAX_PAGES).forEach((result, idx) => {
+      let resultPage = document.createElement("a");
+      resultPage.href = `/Assets/${result.title}`;
+      let list2 = [
+        "dark:text-white",
+        "text-white",
+        "border",
+        "dark:border-white",
+        "border-black",
+        "flex",
+        "flex-col",
+        "gap-2",
+        "p-3",
+        "w-full",
+        "text-white",
+        "dark:text-black",
+        "dark:bg-purple-300",
+        "bg-blue-300",
+        "rounded",
+      ];
+      resultPage.className = "searchResultPage";
+      resultPage.classList.add(...list2);
+      let metadata = lunrResult[idx].matchData.metadata;
+      let matchPosition =
+        metadata[Object.keys(metadata)[0]].body.position[0][0];
+      let bodyStartPosition =
+        matchPosition - BODY_LENGTH / 2 > 0
+          ? matchPosition - BODY_LENGTH / 2
+          : 0;
+
+      let resultTitle = document.createElement("a");
+      resultTitle.className = "searchResultTitle";
+      let list = ["dark:text-white", "text-white"];
+      resultTitle.classList.add(...list);
+      resultTitle.innerHTML = result.title;
+      resultPage.append(resultTitle);
+
+      let resultBody = document.createElement("div");
+      resultBody.className = "searchResultBody";
+      resultBody.innerHTML = result.body.substr(bodyStartPosition, BODY_LENGTH);
+      resultPage.append(resultBody);
+      searchResults.append(resultPage);
+
+      instance.mark(query);
+    });
+  };
+
+  initLunr();
+  initUI();
+</script>
+
+<script>
+  //@ts-ignore
+  document.getElementById("searchBox").focus();
+</script>
