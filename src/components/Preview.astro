@@ -4,12 +4,14 @@
 
 <style></style>
 <div
-  class="preview-wrapper flex flex-col justify-start max-w-[1200px] rounded container mx-auto"
+  class="preview-wrapper flex flex-col justify-start max-w-[1200px] container mx-auto"
 >
-<div>
- <slot name="description"/> 
-</div>
-  <div class="element-wrapper p-5 border border-slate-500 ">
+  <div>
+    <slot name="description" />
+  </div>
+  <div
+    class="element-wrapper p-5 border border-slate-500 rounded-tl-md rounded-tr-md"
+  >
     <div class="flex justify-center items-center max-w-[90%]">
       <slot name="element" />
     </div>
@@ -18,3 +20,4 @@
     <slot />
   </div>
 </div>
+

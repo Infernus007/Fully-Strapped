@@ -26,10 +26,12 @@ export const collections = {
 //element's order matter , it should be same as the order defined in `collections` object above
 const collectionIcons = [
   '<i class="fa-solid fa-cube"></i>',
-  '<i class="fa-regular fa-map"></i>',
+  // '<i class="fa-regular fa-map"></i>',
 ];
 
-const collectionNames = Object.keys(collections);
+// const collectionNames = Object.keys(collections);
+
+const collectionNames = ["assets"];
 
 export const collectionObj: { name: string; icon: string }[] =
   collectionNames.map((name, index) => ({

@@ -26,35 +26,35 @@ const components = allComponents
   )
   .join("");
 
-const allLayouts = await getCollection("layouts");
-const layouts = allLayouts
-  .map(
-    (e) =>
-      `<a role="button"  href="/Layouts/${
-        e.data.title
-      }" class="drawer-navigation-item">
-      <span class="drawer-navigation-item-icon dark:text-white">
-        <i class="fa-solid fa-fire fa-lg "></i>
-      </span>
-      <span class="drawer-navigation-item-label dark:text-white">${
-        e.data.title.charAt(0).toUpperCase() + e.data.title.slice(1)
-      }</span>
-      <span class="spacer"></span>
-      <span class="drawer-navigation-item-following-icon"> </span>
-    </a>`
-  )
-  .join("");
+// const allLayouts = await getCollection("layouts");
+// const layouts = allLayouts
+//   .map(
+//     (e) =>
+//       `<a role="button"  href="/Layouts/${
+//         e.data.title
+//       }" class="drawer-navigation-item">
+//       <span class="drawer-navigation-item-icon dark:text-white">
+//         <i class="fa-solid fa-fire fa-lg "></i>
+//       </span>
+//       <span class="drawer-navigation-item-label dark:text-white">${
+//         e.data.title.charAt(0).toUpperCase() + e.data.title.slice(1)
+//       }</span>
+//       <span class="spacer"></span>
+//       <span class="drawer-navigation-item-following-icon"> </span>
+//     </a>`
+//   )
+//   .join("");
 
 //TODO:make this dynamic
 // for now this must be done for it to be working
-let data: string[] = [components, layouts];
+let data: string[] = [components];
 
 console.log(collectionObj);
 const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
@@ -102,13 +102,12 @@ const { title } = Astro.props;
               {
                 collectionObj.map((e) => (
                   <a
-                    transition:persist
                     data-drawer-target={e.name}
                     role="button"
                     href={
                       "/" + e.name.charAt(0).toUpperCase() + e.name.slice(1)
                     }
-                    class="navigation-item "
+                    class="navigation-item disable-on-mobile-links"
                   >
                     <span class="navigation-item-icon">
                       <span set:html={e.icon} />
@@ -163,7 +162,7 @@ const { title } = Astro.props;
                   <a
                     role="button"
                     href="#"
-                    class="drawer-navigation-item drawer-close dark:text-white"
+                    class="drawer-navigation-item drawer-close dark:text-white "
                   >
                     <span class="drawer-navigation-item-icon">
                       <i class="fa-solid fa-arrow-left" />
@@ -197,6 +196,33 @@ const { title } = Astro.props;
           rgb(var(--accent-light)) 30%,
           white 60%
         );
+      }
+
+      /* For WebKit (Chrome, Safari) */
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 6px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: #f2f2f2;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        background-color: #e0e0e0;
+      }
+
+      /* Optional: Customize the appearance of the scroll corner */
+      ::-webkit-scrollbar-corner {
+        background-color: #f2f2f2;
       }
 
       html {
@@ -241,7 +267,7 @@ const { title } = Astro.props;
       }
 
       .titlecontainer {
-        @apply border border-t-0 border-slate-500 rounded-tl-md rounded-tr-md text-xl;
+        @apply border border-t-0 border-slate-500  text-xl;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -253,11 +279,11 @@ const { title } = Astro.props;
         gap: 0.5em;
       }
       .title {
-        @apply text-black dark:text-white p-2 cursor-pointer hover:bg-slate-500 rounded-md;
+        @apply text-black dark:text-white p-2 cursor-pointer hover:bg-cyan-200 rounded-md;
       }
 
       pre {
-        @apply rounded-bl-md rounded-br-md pl-8;
+        @apply border border-t-0 border-slate-500 rounded-bl-md rounded-br-md pl-8;
       }
 
       pre code {
@@ -618,6 +644,7 @@ const { title } = Astro.props;
           padding: 1em;
           gap: 1.5em;
           z-index: var(--layer-important);
+          background-color: var(--navigation-rail-bg);
           width: 100%;
         }
 
@@ -773,13 +800,18 @@ const { title } = Astro.props;
       $(function () {
         function resetSidebarLinks() {
           if (window.innerWidth <= 960) {
-            var disableNavigationLinks =
-              document.querySelectorAll(".navigation-item");
+            var disableNavigationLinks = document.querySelectorAll(
+              ".disable-on-mobile-links"
+            );
+
+            console.log(disableNavigationLinks);
 
             disableNavigationLinks.forEach(function (link) {
+              console.log("disabled");
               link.addEventListener("click", function (event) {
                 // Your custom click event logic here
                 event.preventDefault(); // Prevent the default navigation behavior
+                console.log("prevented");
               });
             });
           }
@@ -802,6 +834,8 @@ const { title } = Astro.props;
         // Attach the debounced function to the window resize event
         $(window).resize(debouncedResetSidebarLinks);
 
+        resetSidebarLinks();
+
         //theme toggler logic
         $(".theme-toggler").click(function () {
           $(".toggler").toggleClass("active");
@@ -809,15 +843,15 @@ const { title } = Astro.props;
 
         //navigation-drawer dropdown item toggler logic
 
-        $(".drawer-navigation-item-toggler").click(function () {
-          var $dropdownItem = $(this).closest(
-            ".drawer-navigation-dropdown-item"
-          );
-          var isExpanded = $dropdownItem.attr("aria-expanded") === "true";
-          console.log("clicked");
-          // Toggle the aria-expanded attribute
-          $dropdownItem.attr("aria-expanded", String(!isExpanded));
-        });
+        // $(".drawer-navigation-item-toggler").click(function () {
+        //   var $dropdownItem = $(this).closest(
+        //     ".drawer-navigation-dropdown-item"
+        //   );
+        //   var isExpanded = $dropdownItem.attr("aria-expanded") === "true";
+        //   console.log("clicked");
+        //   // Toggle the aria-expanded attribute
+        //   $dropdownItem.attr("aria-expanded", String(!isExpanded));
+        // });
 
         //drawer toggler logic
 
@@ -835,98 +869,109 @@ const { title } = Astro.props;
         // Hide all other drawer items by default
 
         //open if hover on item
-        $("[data-drawer-target]").mouseenter(function () {
-          var drawerItem = $(".drawer-wrapper");
-          // Toggle the aria-expanded attribute
-          // drawerItem.attr("aria-expanded", true);
 
-          let drawerToSetActive = $(this).data("drawer-target");
+        function initInteractions() {
+          $("[data-drawer-target]").mouseenter(function () {
+            var drawerItem = $(".drawer-wrapper");
+            // Toggle the aria-expanded attribute
+            // drawerItem.attr("aria-expanded", true);
 
-          console.warn($(`[data-drawer='${drawerToSetActive}']`));
-          $(".drawer-navigation-items")
-            .not(`[data-drawer='${drawerToSetActive}']`)
-            .hide();
-          $(`[data-drawer='${drawerToSetActive}']`).fadeIn(300);
+            let drawerToSetActive = $(this).data("drawer-target");
 
-          var drawerItem = $(".drawer-wrapper");
-          // Toggle the aria-expanded attribute
-          drawerItem.attr("aria-expanded", "true");
-        });
-
-        $("[data-drawer-target]").click(function () {
-          var drawerItem = $(".drawer-wrapper");
-          let drawerToSetActive = $(this).data("drawer-target");
-
-          // Check if the drawer is already visible
-          if (drawerItem.hasClass("open")) {
+            console.warn($(`[data-drawer='${drawerToSetActive}']`));
             $(".drawer-navigation-items")
               .not(`[data-drawer='${drawerToSetActive}']`)
               .hide();
             $(`[data-drawer='${drawerToSetActive}']`).fadeIn(300);
-          } else {
-            // Slide in the drawer from the left
-            drawerItem.css({ left: "-100%" }).animate(
+
+            var drawerItem = $(".drawer-wrapper");
+            // Toggle the aria-expanded attribute
+            drawerItem.attr("aria-expanded", "true");
+          });
+
+          $("[data-drawer-target]").click(function () {
+            var drawerItem = $(".drawer-wrapper");
+            let drawerToSetActive = $(this).data("drawer-target");
+
+            console.warn($(`[data-drawer='${drawerToSetActive}']`));
+            $(".drawer-navigation-items")
+              .not(`[data-drawer='${drawerToSetActive}']`)
+              .hide();
+            $(`[data-drawer='${drawerToSetActive}']`).fadeIn(300);
+
+            // Check if the drawer is already visible
+            if (drawerItem.hasClass("open")) {
+              $(".drawer-navigation-items")
+                .not(`[data-drawer='${drawerToSetActive}']`)
+                .hide();
+              $(`[data-drawer='${drawerToSetActive}']`).fadeIn(300);
+            } else {
+              // Slide in the drawer from the left
+              drawerItem.css({ left: "-100%" }).animate(
+                {
+                  left: 0,
+                },
+                250
+              );
+
+              // Hide the navigation rail
+              $(".navigation-rail-wrapper").animate(
+                {
+                  left: "-100px",
+                  opacity: 0,
+                },
+                250
+              );
+
+              $(".drawer-wrapper").addClass("open");
+            }
+
+            $(".drawer-wrapper").css("z-index", 10);
+            $(".navigation-rail-wrapper").css("z-index", -1);
+          });
+
+          $(".drawer-close").click(function () {
+            // Slide out the drawer to the left
+            $(".drawer-wrapper").animate(
               {
-                left: 0,
+                left: "-100%",
               },
-              250
+              250,
+              function () {
+                // Reset drawer visibility and content
+                $(".drawer-wrapper").removeClass("open");
+                $(".drawer-navigation-items").hide();
+              }
             );
 
-            // Hide the navigation rail
+            // Show the navigation rail
             $(".navigation-rail-wrapper").animate(
               {
-                left: "-100px",
-                opacity: 0,
+                opacity: 1,
+                left: "0px",
               },
               250
             );
 
-            $(".drawer-wrapper").addClass("open");
-          }
+            $(".drawer-wrapper").css("z-index", -1);
+            $(".navigation-rail-wrapper").css("z-index", 10);
+          });
+          $(".drawer-wrapper").mouseenter(function () {
+            console.log("entered");
+            // Toggle the aria-expanded attribute
+            $(".drawer-wrapper").attr("aria-expanded", "true");
+          });
 
-          $(".drawer-wrapper").css("z-index", 10);
-          $(".navigation-rail-wrapper").css("z-index", -1);
-        });
+          // Close if hover anywhere else
+          $(".drawer-wrapper,[data-drawer-target]").mouseleave(function () {
+            var drawerItem = $(".drawer-wrapper");
+            // Set the aria-expanded attribute to false when the mouse leaves the target or wrapper
+            // console.log("done");
+            drawerItem.attr("aria-expanded", "false");
+          });
+        }
 
-        $(".drawer-close").click(function () {
-          // Slide out the drawer to the left
-          $(".drawer-wrapper").animate(
-            {
-              left: "-100%",
-            },
-            250,
-            function () {
-              // Reset drawer visibility and content
-              $(".drawer-wrapper").removeClass("open");
-              $(".drawer-navigation-items").hide();
-            }
-          );
-
-          // Show the navigation rail
-          $(".navigation-rail-wrapper").animate(
-            {
-              opacity: 1,
-              left: "0px",
-            },
-            250
-          );
-
-          $(".drawer-wrapper").css("z-index", -1);
-          $(".navigation-rail-wrapper").css("z-index", 10);
-        });
-        $(".drawer-wrapper").mouseenter(function () {
-          console.log("entered");
-          // Toggle the aria-expanded attribute
-          $(".drawer-wrapper").attr("aria-expanded", "true");
-        });
-
-        // Close if hover anywhere else
-        $(".drawer-wrapper,[data-drawer-target]").mouseleave(function () {
-          var drawerItem = $(".drawer-wrapper");
-          // Set the aria-expanded attribute to false when the mouse leaves the target or wrapper
-          // console.log("done");
-          drawerItem.attr("aria-expanded", "false");
-        });
+        initInteractions();
 
         $(".sidebar-toggler").click(function () {
           $(this).toggleClass("active");
@@ -960,7 +1005,14 @@ const { title } = Astro.props;
           }
         }
 
-        document.addEventListener("astro:after-swap", setTheme);
+        setTheme();
+
+        document.addEventListener("astro:after-swap", redoThings);
+
+        function redoThings() {
+          setTheme();
+          initInteractions();
+        }
 
         $(".toggler").click(function (e) {
           if (moon.hasClass("-translate-y-10")) {
